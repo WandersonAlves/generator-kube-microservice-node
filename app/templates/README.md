@@ -1,6 +1,6 @@
-# e3-service-template
+# <%= projectName %>
 
-Initial template for e3 services.
+Initial template for your services!.
 
 Has:
 
@@ -19,14 +19,6 @@ Has:
 
 - On one terminal, run `npm run watch:build` to transpile .ts files to .js
 - On another terminal, run `npm run watch:server` to server transpiled .ts files with nodemon
-
-## CI/CD
-
-Our Jenkins Pipeline will deploy your service automatically
-
-## Commit guide
-
-See http://karma-runner.github.io/1.0/dev/git-commit-msg.html
 
 ## Usage
 
