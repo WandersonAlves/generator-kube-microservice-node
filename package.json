@@ -1,0 +1,38 @@
+{
+  "name": "generator-kube-microservice-node",
+  "version": "0.0.1",
+  "description": "A k8s micro-service generator with deployment, service, Dockerfile. Built with express/mongo/redis",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WandersonAlves/generator-kube-microservice-node.git"
+  },
+  "keywords": [
+    "yeoman-generator",
+    "node",
+    "express",
+    "mongo",
+    "redis",
+    "kubernetes",
+    "k8s",
+    "cluster",
+    "micro",
+    "docker",
+    "service"
+  ],
+  "author": "Wanderson Alves <wandersonalvesferreira2012@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/WandersonAlves/generator-kube-microservice-node/issues"
+  },
+  "homepage": "https://github.com/WandersonAlves/generator-kube-microservice-node#readme",
+  "dependencies": {
+    "yeoman-generator": "^3.1.1"
+  },
+  "files": [
+    "app"
+  ]
+}

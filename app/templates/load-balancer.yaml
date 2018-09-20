@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: <%= projectName %>-alb
+  labels:
+    app: <%= projectName %>-service
+spec:
+  selector:
+    app: <%= projectName %>-service
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 3000

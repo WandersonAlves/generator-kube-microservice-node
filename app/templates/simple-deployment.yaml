@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <%= projectName %>
+spec:
+  selector:
+    matchLabels:
+      app: <%= projectName %>
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: <%= projectName %>
+    spec:
+      containers:
+      - name: <%= projectName %>
+        image: <%= projectName %>:latest
+        ports:
+          - containerPort: 80
