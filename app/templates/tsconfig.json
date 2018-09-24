@@ -3,7 +3,10 @@
     "target": "es6",
     "module": "commonjs",
     "outDir": "dist",
-    "sourceMap": true
+    "sourceMap": true,
+    "lib": [
+      "es2017"
+    ]
   },
   "files": [
     "./node_modules/@types/node/index.d.ts"

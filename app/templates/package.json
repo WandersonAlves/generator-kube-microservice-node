@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Error: no test specified\"",
     "clean": "rm -rf dist/",
     "build": "npm run clean && tsc",
     "build:docker": "docker build . -t <%= projectName %>",
