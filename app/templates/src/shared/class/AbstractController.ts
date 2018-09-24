@@ -1,7 +1,7 @@
-import { Pagination } from './../interfaces/Pagination.interface';
+import UnprocessableEntityException from "../exceptions/UnprocessableEntityException";
+import { Pagination } from './../interfaces/PaginationInterface';
 import { Document, DocumentQuery, Model, Query } from "mongoose";
 import { IMongoModel } from "../interfaces/IMongoModel";
-import UnprocessableEntityException from "../exceptions/UnprocessableEntityException";
 
 export class AController<Interface extends IMongoModel> {
 
@@ -11,25 +11,29 @@ export class AController<Interface extends IMongoModel> {
     this._model = model;
   }
 
-  save(obj: Interface): Promise<Document> {
+  save(obj: Interface): Promise<Interface> {
     if (obj) {
       const model: Document = new this._model(obj);
-      return model.save();
+      return model.save() as any;
     }
     else {
       throw new UnprocessableEntityException(null)
     }
   }
 
-  findById(id: string): DocumentQuery<Document, Document> {
-    return this._model.findById({_id: id});
+  findById(id: string): Promise<Interface> {
+    return this._model.findById({ _id: id }) as any;
   }
 
-  find(params: { filter?: any, pagination?: Pagination, sort?: string, fieldsToShow?: {[attr: string]: boolean} }): DocumentQuery<Document[], Document> {
-    return this._model.find(params.filter, params.fieldsToShow, params.pagination).sort(params.sort);
+  find(params: { filter?: any, pagination?: Pagination, sort?: string, fieldsToShow?: { [attr: string]: boolean } }): Promise<Interface[]> {
+    return this._model.find(params.filter, params.fieldsToShow, params.pagination).sort(params.sort) as any;
   }
 
-  geoFind(params: { maxDistance: number, long: number, lat: number, pagination?: Pagination, codVendor?: number }): DocumentQuery<Document[], Document> {
+  findOne(params: { filter?: any, pagination?: Pagination, sort?: string, fieldsToShow?: { [attr: string]: boolean } }): Promise<Interface> {
+    return this._model.findOne(params.filter, params.fieldsToShow, params.pagination).sort(params.sort) as any;
+  }
+
+  geoFind(params: { maxDistance: number, long: number, lat: number, pagination?: Pagination, codVendor?: number }): Promise<Interface[]> {
     return this._model.find({
       "LOCATION": {
         $near: {
@@ -45,14 +49,14 @@ export class AController<Interface extends IMongoModel> {
         { CODUSUR2: params.codVendor },
         { CODUSUR3: params.codVendor }
       ]
-    }, null, params.pagination);
+    }, null, params.pagination) as any;
   }
 
   delete(id: string): Query<Interface> {
-    return this._model.deleteOne({_id: id});
+    return this._model.deleteOne({ _id: id });
   }
 
-  update(params: Interface): DocumentQuery<Document, Document> {
-    return this._model.findOneAndUpdate({ _id: params._id }, params);
+  update(params: Interface): Promise<Interface> {
+    return this._model.findOneAndUpdate({ _id: params._id }, params) as any;
   }
 }

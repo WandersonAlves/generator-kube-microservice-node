@@ -1,4 +1,4 @@
-import { Pagination } from "../interfaces/Pagination.interface";
+import { Pagination } from "../interfaces/PaginationInterface";
 
 export default class UtilsClass {
   constructor() { }
