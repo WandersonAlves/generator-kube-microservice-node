@@ -5,6 +5,11 @@ import middleware from './shared/server/middlewares';
 import * as figlet from 'figlet';
 import Connection from './shared/class/Connection';
 
+import * as sourceMapSupport from 'source-map-support';
+
+sourceMapSupport.install();
+process.on('unhandledRejection', console.log);
+
 const mongoConn = new Connection();
 
 middleware.initMiddlewares();
