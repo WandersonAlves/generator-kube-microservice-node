@@ -3,10 +3,10 @@ kind: Service
 metadata:
   name: <%= projectName %>-alb
   labels:
-    app: <%= projectName %>-service
+    app: <%= projectName %>
 spec:
   selector:
-    app: <%= projectName %>-service
+    app: <%= projectName %>
   ports:
   - port: 80
     protocol: TCP
