@@ -20,6 +20,7 @@
   "dependencies": {
     "@types/mongoose": "^5.0.18",
     "@types/redis": "^2.8.6",
+    "axios": "^0.18.0",
     "body-parser": "^1.18.2",
     "compression": "^1.7.3",
     "cors": "^2.8.4",
