@@ -24,6 +24,7 @@ export default class Connection {
       }
       catch (err) {
         reject(err);
+        process.exit(1);
       }
     })
   }
