@@ -12,5 +12,6 @@ export default {
   mongodb_url: process.env.MONGO_URL,
   mongodb_database_name: process.env.MONGO_DB,
   mongodb_extras: process.env.MONGO_SSL,
-  redis_url: process.env.REDIS_URL
+  redis_url: process.env.REDIS_URL,
+  ingress_url: process.env.INGRESS_URL
 }

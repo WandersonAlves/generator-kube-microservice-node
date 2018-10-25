@@ -55,33 +55,6 @@ export class AController<Interface extends IMongoModel> {
     return this._model.findOne(params.filter, params.fieldsToShow, params.pagination).sort(params.sort).exec() as any;
   }
   /**
-   * Finds multiple Documents using Mongo GeoLocation Query
-   * @param params Allowed Params: maxDistance, long, lat, pagination, codVendor
-   * @param params.maxDistance A number representing distance. 1000 = 1km
-   * @param params.long A number representing longitude value
-   * @param params.lat A number representing latitude value
-   * @param params.pagination Object with skip, limit properties to control pagination
-   * @param params.codVendor A CODUSUR optional value used to filter results
-   */
-  geoFind(params: { maxDistance: number, long: number, lat: number, pagination?: Pagination, codVendor?: number }): Promise<Interface[]> {
-    return this._model.find({
-      "LOCATION": {
-        $near: {
-          $maxDistance: params.maxDistance,
-          $geometry: {
-            type: "Point",
-            coordinates: [params.long, params.lat]
-          }
-        }
-      },
-      $or: [
-        { CODUSUR1: params.codVendor },
-        { CODUSUR2: params.codVendor },
-        { CODUSUR3: params.codVendor }
-      ]
-    }, null, params.pagination) as any;
-  }
-  /**
    * Deletes a Mongoose Document
    * @param id A ObjectId from Mongoose schema
    */
