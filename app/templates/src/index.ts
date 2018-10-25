@@ -16,8 +16,8 @@ middleware.initMiddlewares();
 router.initRoutes();
 middleware.initExceptionMiddlewares();
 
-server.listen(env.server_port, () => {
-  mongoConn.connect();
+server.listen(env.server_port, async () => {
+  await mongoConn.connect();
   console.log("\x1b[31m", figlet.textSync('<%= projectName %>', {
     font: 'Fire Font-s',
     horizontalLayout: 'default',

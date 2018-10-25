@@ -16,4 +16,10 @@ spec:
       - name: <%= projectName %>
         image: <%= projectName %>:latest
         ports:
-          - containerPort: 80
+          - containerPort: 3000
+        livenessProbe:
+          initialDelaySeconds: 20
+          periodSeconds: 5
+          httpGet:
+            path: /health
+            port: 3000

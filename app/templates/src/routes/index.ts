@@ -1,4 +1,5 @@
 import <%= entityName %> from './<%= entityName %>';
+import HealthCheck from 'HealthCheck';
 import server from '../shared/server';
 
 export default {
@@ -7,5 +8,6 @@ export default {
    */
   initRoutes() {
     server.use('/<%= entityName %>', <%= entityName %>);
+    server.use('/health', HealthCheck);
   }
 }
