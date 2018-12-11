@@ -40,8 +40,8 @@ export class AController<Interface extends IMongoModel> {
    * @param params.fieldsToShow Object containing the fields to return from the Documents
    * @returns A Promise with a Array of Documents found
    */
-  find(params: { filter?: any, pagination?: Pagination, sort?: string, fieldsToShow?: { [attr: string]: boolean } }): Promise<Interface[]> {
-    return this._model.find(params.filter, params.fieldsToShow, params.pagination).sort(params.sort) as any;
+  find(params: { filter?: Partial<Interface>, pagination?: Pagination, sort?: string, fieldsToShow?: { [attr: string]: boolean } }, lean: boolean = false): Promise<Interface[]> {
+    return this._model.find(params.filter, params.fieldsToShow, params.pagination).sort(params.sort).lean(lean) as any;
   }
   /**
    * Finds the first Document that matchs the params
@@ -51,8 +51,8 @@ export class AController<Interface extends IMongoModel> {
    * @param params.fieldsToShow Object containing the fields to return from the Documents
    * @returns A Promise with a single Document
    */
-  findOne(params: { filter?: any, pagination?: Pagination, sort?: string, fieldsToShow?: { [attr: string]: boolean } }): Promise<Interface> {
-    return this._model.findOne(params.filter, params.fieldsToShow, params.pagination).sort(params.sort).exec() as any;
+  findOne(params: { filter?: Partial<Interface>, pagination?: Pagination, sort?: string, fieldsToShow?: { [attr: string]: boolean } }, lean: boolean = false): Promise<Interface> {
+    return this._model.findOne(params.filter, params.fieldsToShow, params.pagination).sort(params.sort).lean(lean) as any;
   }
   /**
    * Deletes a Mongoose Document

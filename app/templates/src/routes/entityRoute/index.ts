@@ -2,6 +2,8 @@ import { get<%= entityName %>s } from './../../entities/<%= entityName %>/<%= bu
 import { Request, Response, NextFunction, Router } from 'express';
 import { check, validationResult } from 'express-validator/check';
 
+import UnprocessableEntityException from '../../shared/exceptions/UnprocessableEntityException';
+
 const router = Router();
 const checkEntityGet = [
   check('somefield').exists()
