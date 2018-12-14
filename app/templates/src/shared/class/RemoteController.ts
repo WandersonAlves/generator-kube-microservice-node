@@ -1,30 +1,28 @@
-import axios, { AxiosPromise } from 'axios';
+import axios, { AxiosPromise, AxiosError } from 'axios';
 import env from '../../config/env';
 import UpstreamConnectionException from '../exceptions/UpstreamConnectionException';
 
-export default class RemoteController {
-  private _remoteServiceAddress: string;
+const axiosInstance = axios.create({
+  baseURL: env.onpremise_url
+});
 
-  constructor(remoteServiceAddress?: string) {
-    this._remoteServiceAddress = remoteServiceAddress || env.ingress_url;
-    axios.interceptors.response.use(
-      response => response,
-      (err) => {
-        throw new UpstreamConnectionException();
-      }
-    )
+axiosInstance.interceptors.response.use(
+  response => response,
+  (err: AxiosError) => {
+    return Promise.reject(new UpstreamConnectionException({}, err.response.data.message || err.response.data));
   }
+)
 
+export default {
   get(path: string, params?: any): AxiosPromise<any> {
-    return axios.get(`${this._remoteServiceAddress}${path}`, params);
-  }
-
+    return axiosInstance.get(`${path}`, params);
+  },
   post(path: string, params?: any): AxiosPromise<any> {
-    return axios.post(`${this._remoteServiceAddress}${path}`, params);
-  }
-
+    params ? params.token = env.onpremise_token : params = { token: env.onpremise_token };
+    return axiosInstance.post(`${path}`, params);
+  },
   put(path: string, params?: any): AxiosPromise<any> {
-    return axios.put(`${this._remoteServiceAddress}${path}`, params);
+    params.token = env.onpremise_token;
+    return axiosInstance.put(`${path}`);
   }
-
 }
