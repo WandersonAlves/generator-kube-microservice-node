@@ -4,8 +4,9 @@ import <%= controllerName %> from './<%= controllerName %>';
 
 import * as httpStatus from 'http-status-codes';
 import GenericException from '../../shared/exceptions/GenericException';
+import providers from '../../config/providers';
 
-const <%= controllerInstanceName %> = new <%= controllerName %>();
+const <%= controllerInstanceName %> = providers.<%= controllerInstanceName %>;
 
 export const get<%= entityName %>s = async (req: Request, res: Response, next: NextFunction) => {
   try {

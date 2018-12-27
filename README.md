@@ -87,3 +87,63 @@ router.post('/', postChecking, (req: Request, res: Response, next: NextFunction)
 All exceptions that are catch by `src/shared/server/middlewares/exception.ts`, have `GenericException` as they base.
 
 So, just continuing throwning new Errors
+
+
+### Dependency Injection
+
+This template have a simple dependence injection on config/providers.ts. This file, handle all the controllers instances of application.
+
+Ex:
+
+```
+import VendorController from "../entities/Vendor/VendorController";
+import RemoteController from "../shared/class/RemoteController";
+import RankingController from "../entities/Ranking/RankingController";
+import UtilsClass from "../shared/class/UtilsClass";
+import PointsHistoryController from "../entities/PointsHistory/PointsHistoryController";
+import GameficationParamsController from "../entities/GameficationParams/GameficationParamsController";
+
+const providers = (() => {
+  const vendorController = new VendorController();
+  const remoteController = new RemoteController();
+  // This controller has dependency on another controller
+  const rankingController = new RankingController(vendorController);
+  const utilsController = new UtilsClass;
+  const pointsHistoryController = new PointsHistoryController();
+  const gameficationController = new GameficationParamsController();
+
+  return {
+    vendorController,
+    remoteController,
+    rankingController,
+    utilsController,
+    pointsHistoryController,
+    gameficationController
+  }
+})();
+
+export default providers;
+```
+
+If your controller has another class dependency, create your class like this:
+
+```
+export default class RankingController extends AController <RankingInterface> {
+
+  constructor(private vendorController: VendorController) {
+    super(RankingModel);
+    this.vendorController = vendorController;
+  }
+```
+
+In your business file, use providers like this:
+
+```
+import providers from '../../config/providers';
+
+const rankingController = providers.rankingController;
+const remoteController = providers.remoteController;
+const utils = providers.utilsController;
+```
+
+This will ensure that you have only singleton classes running
