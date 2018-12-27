@@ -1,6 +1,6 @@
 {
   "name": "generator-kube-microservice-node",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "description": "A k8s micro-service generator with deployment, service, Dockerfile. Built with express/mongo/redis",
   "main": "index.js",
   "scripts": {
