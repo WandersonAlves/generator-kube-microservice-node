@@ -1,5 +1,5 @@
 import <%= entityName %> from './<%= entityName %>';
-import HealthCheck from 'HealthCheck';
+import HealthCheck from './HealthCheck';
 import server from '../shared/server';
 
 export default {
