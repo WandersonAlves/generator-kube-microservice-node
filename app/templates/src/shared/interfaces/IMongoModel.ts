@@ -40,6 +40,14 @@ export enum MongoBSONTypes {
   MAXKEY = 127
 }
 
+type geoJSONPoint = [number, number];
+
+type _mongoGeometries = {
+  type: 'Polygon' | 'Overview' | 'Point' | 'LineString' | 'MultiPoint' | 'MultiLineString' | 'MultiPolygon' | 'GeometryCollection',
+  coordinates?: geoJSONPoint | [geoJSONPoint] | [[geoJSONPoint]] | [[[geoJSONPoint]]]
+  geometries?: _mongoGeometries
+}
+
 type _mongoOperations<T, P> = {
   /** COMPARISON OPERATORS */
   // Matches any of the values specified in an array.
@@ -115,6 +123,23 @@ type _mongoOperations<T, P> = {
   };
   // Matches documents that satisfy a JavaScript expression.
   $where?: Function;
-
   /** GEOSPATIAL OPERATORS */
+  $geoIntersects?: {
+    $geometry: _mongoGeometries
+  }
+  /**
+   * Specifies a point for which a geospatial query returns the documents from nearest to farthest.
+   * The $near operator can specify either a GeoJSON point or legacy coordinate point.
+   * $near requires a geospatial index:
+   *    2dsphere index if specifying a GeoJSON point,
+   *    2d index if specifying a point using legacy coordinates.
+   */
+  $near?: {
+    $geometry: {
+      type: 'Point',
+      coordinates: geoJSONPoint
+    },
+    $maxDistance: number;
+    $minDistance: number;
+  }
 }
