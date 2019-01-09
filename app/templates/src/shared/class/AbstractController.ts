@@ -1,8 +1,10 @@
 import { Pagination } from './../interfaces/PaginationInterface';
 import { Document, Model } from "mongoose";
-import { IMongoModel } from "../interfaces/IMongoModel";
+import { IMongoModel, MongoMerger } from "../interfaces/IMongoModel";
 
-import UnprocessableEntityException from "../exceptions/UnprocessableEntityException";
+type InterfaceBoolean<T> = {
+  [P in keyof T]?: boolean;
+}
 
 export class AController<Interface extends IMongoModel> {
 
@@ -13,16 +15,11 @@ export class AController<Interface extends IMongoModel> {
   }
   /**
    * Saves the new Mongoose Model
-   * @param obj A object that matchs a mongoose schema
+   * @param entity A object that matchs a mongoose schema
    */
-  save(obj: Interface): Promise<Interface> {
-    if (obj) {
-      const model: Document = new this._model(obj);
-      return model.save() as any;
-    }
-    else {
-      throw new UnprocessableEntityException(null)
-    }
+  save(entity: Interface): Promise<Interface> {
+    const model: Document = new this._model(entity);
+    return model.save() as any;
   }
   /**
    * Finds a Document by ObjectId
@@ -40,7 +37,7 @@ export class AController<Interface extends IMongoModel> {
    * @param params.fieldsToShow Object containing the fields to return from the Documents
    * @returns A Promise with a Array of Documents found
    */
-  find(params: { filter?: Partial<Interface>, pagination?: Pagination, sort?: string, fieldsToShow?: { [attr: string]: boolean } }, lean: boolean = false): Promise<Interface[]> {
+  find(params: { filter?: Partial<MongoMerger<Interface>>, pagination?: Pagination, sort?: string, fieldsToShow?: InterfaceBoolean<Interface> }, lean: boolean = false): Promise<Interface[]> {
     return this._model.find(params.filter, params.fieldsToShow, params.pagination).sort(params.sort).lean(lean) as any;
   }
   /**
@@ -51,8 +48,8 @@ export class AController<Interface extends IMongoModel> {
    * @param params.fieldsToShow Object containing the fields to return from the Documents
    * @returns A Promise with a single Document
    */
-  findOne(params: { filter?: Partial<Interface>, pagination?: Pagination, sort?: string, fieldsToShow?: { [attr: string]: boolean } }, lean: boolean = false): Promise<Interface> {
-    return this._model.findOne(params.filter, params.fieldsToShow, params.pagination).sort(params.sort).lean(lean) as any;
+  findOne(params: { filter?: Partial<MongoMerger<Interface>>, pagination?: Pagination, sort?: string, fieldsToShow?: InterfaceBoolean<Interface> }): Promise<Interface> {
+    return this._model.findOne(params.filter, params.fieldsToShow, params.pagination).sort(params.sort).exec() as any;
   }
   /**
    * Deletes a Mongoose Document
@@ -67,5 +64,12 @@ export class AController<Interface extends IMongoModel> {
    */
   update(params: Interface): Promise<Interface> {
     return this._model.findByIdAndUpdate(params._id, params, { new: true }) as any;
+  }
+  /**
+   * Save multiple documents
+   * @param entities Array os objects to save
+   */
+  saveMultiple(entities: Interface[]): Promise<Interface[]> {
+    return this._model.insertMany(entities) as any;
   }
 }
