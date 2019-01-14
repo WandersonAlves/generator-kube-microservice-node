@@ -17,7 +17,7 @@ export class AController<Interface extends IMongoModel> {
    * Saves the new Mongoose Model
    * @param entity A object that matchs a mongoose schema
    */
-  save(entity: Interface): Promise<Interface> {
+  save(entity: Interface): Promise<Interface> | Promise<Document> {
     const model: Document = new this._model(entity);
     return model.save() as any;
   }
@@ -26,8 +26,8 @@ export class AController<Interface extends IMongoModel> {
    * @param id A ObjectId from Mongoose schema
    * @returns A Promise with a single Document
    */
-  findById(id: string): Promise<Interface> {
-    return this._model.findById({ _id: id }) as any;
+  findById(id: string, lean: boolean = false): Promise<Interface> {
+    return this._model.findById({ _id: id }).lean(lean) as any;
   }
   /**
    * Finds multiple Documents
@@ -48,19 +48,19 @@ export class AController<Interface extends IMongoModel> {
    * @param params.fieldsToShow Object containing the fields to return from the Documents
    * @returns A Promise with a single Document
    */
-  findOne(params: { filter?: Partial<MongoMerger<Interface>>, pagination?: Pagination, sort?: string, fieldsToShow?: InterfaceBoolean<Interface> }): Promise<Interface> {
-    return this._model.findOne(params.filter, params.fieldsToShow, params.pagination).sort(params.sort).exec() as any;
+  findOne(params: { filter?: Partial<MongoMerger<Interface>>, pagination?: Pagination, sort?: string, fieldsToShow?: InterfaceBoolean<Interface> }, lean: boolean = false): Promise<Interface> {
+    return this._model.findOne(params.filter, params.fieldsToShow, params.pagination).sort(params.sort).lean() as any;
   }
   /**
    * Deletes a Mongoose Document
    * @param id A ObjectId from Mongoose schema
    */
-  delete(id: string): Promise<Interface> {
-    return this._model.deleteOne({ _id: id }).exec();
+  delete(id: string, lean: boolean = false): Promise<Interface> {
+    return this._model.deleteOne({ _id: id }).lean(lean) as any;
   }
   /**
    * Updates a Document
-   * @param params  A object that matchs a mongoose schema with a currently know ObjectId
+   * @param params A object that matchs a mongoose schema with a currently know ObjectId
    */
   update(params: Interface): Promise<Interface> {
     return this._model.findByIdAndUpdate(params._id, params, { new: true }) as any;
