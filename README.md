@@ -9,6 +9,7 @@ This template contains:
 - TypeScript
 - Dockerfile
 - Kubernetes deployment config with load-balancer file
+- **new** TypeScript definition for mongo operators on controller functions
 
 ## Install
 
@@ -26,6 +27,12 @@ This template contains:
 
 - On one terminal, run `npm run watch:build` to transpile .ts files to .js
 - On another terminal, run `npm run watch:server` to server transpiled .ts files with nodemon
+- Create a .env file in root. This file keep some important enviromment variables has:
+  - PORT
+  - MONGO_URL
+  - MONGO_DB
+
+Edit `src/config/env.ts` with your current needs
 
 ## Usage
 
@@ -36,7 +43,7 @@ This file have all methods necessary to operate on a mongoose model.
 
 Example code:
 
-```
+```javascript
 export default SampleController extends AController<SomeInterface> {
   constructor() {
     super(SomeMongooseModel)
@@ -46,7 +53,7 @@ export default SampleController extends AController<SomeInterface> {
 
 With your new controller, you can do these things (and more) in your BusinessLayer:
 
-```
+```javascript
 export const sampleBussinesMethod = async (req, res, next) => {
   try {
     // Find all documents within the collection
@@ -65,7 +72,7 @@ Then, in the route definitions, use your business layer (see `src/routes/entityR
 
 With POST/PUT requests, you'll write something like this:
 
-```
+```javascript
 const postChecking = [
   check('someFieldOnRequestBody').exists(),
 ];
@@ -95,7 +102,7 @@ This template have a simple dependence injection on config/providers.ts. This fi
 
 Ex:
 
-```
+```javascript
 import VendorController from "../entities/Vendor/VendorController";
 import RemoteController from "../shared/class/RemoteController";
 import RankingController from "../entities/Ranking/RankingController";
@@ -127,7 +134,7 @@ export default providers;
 
 If your controller has another class dependency, create your class like this:
 
-```
+```javascript
 export default class RankingController extends AController <RankingInterface> {
 
   constructor(private vendorController: VendorController) {
@@ -138,7 +145,7 @@ export default class RankingController extends AController <RankingInterface> {
 
 In your business file, use providers like this:
 
-```
+```javascript
 import providers from '../../config/providers';
 
 const rankingController = providers.rankingController;
@@ -147,3 +154,13 @@ const utils = providers.utilsController;
 ```
 
 This will ensure that you have only singleton classes running
+
+### Docker and Kubernetes
+
+To build a docker image, you have to build the project. Just use `npm run build:docker` and to publish, use `npm run publish:docker`. Remember to edit these commands if you use private repos.
+
+The Kubernetes deployment file (`simple-deployment.yaml`), has a `LivenessProbe` that checks if the route `/health` returns 200. This route, pings to the database, if something goes wrong, your service will be restarted. The deployment also has a `TimeZone` configuration that you can set the `TimeZone` of the running container. The default is pointing to America/Recife and you can change this anytime if you need.
+
+The load balancer file simples expose the `Deployment` to a `Load Balancer Service` running to the world on port 80 and binding the port 3000 of the `Deployment` to it.
+
+After configuring, you need to add the `Service` definition in a `ingress` controller or something else.
