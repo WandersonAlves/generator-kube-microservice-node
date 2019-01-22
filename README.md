@@ -13,7 +13,7 @@ This template contains:
 
 ## Install
 
-- `npm i -g yeoman`
+- `npm i -g yo`
 - `npm i -g generator-kube-microservice-node`
 - `yo generator-kube-microservice-node`
 - Follow the inscructions
