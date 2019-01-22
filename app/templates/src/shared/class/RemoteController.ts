@@ -18,15 +18,15 @@ export default class RemoteController {
     )
   }
 
-  get(path: string, params?: any): AxiosPromise<any> {
-    return this.axios.get(`${path}`, params);
+  get(path: string, params?: {[attr: string]: any}): AxiosPromise<any> {
+    return this.axios.get(`${path}`, { params });
   }
 
-  post(path: string, params?: any): AxiosPromise<any> {
+  post(path: string, params?: {[attr: string]: any}): AxiosPromise<any> {
     return this.axios.post(`${path}`, params);
   }
 
-  put(path: string, params?: any): AxiosPromise<any> {
+  put(path: string, params?: {[attr: string]: any}): AxiosPromise<any> {
     return this.axios.put(`${path}`, params);
   }
 
