@@ -11,7 +11,7 @@ This template contains:
 - TypeScript
 - Dockerfile
 - Kubernetes deployment config with load-balancer file
-- **new** TypeScript definition for mongo operators on controller functions
+- TypeScript definition for mongo operators on controller functions
 
 ## Install
 
@@ -139,9 +139,8 @@ If your controller has another class dependency, create your class like this:
 ```javascript
 export default class RankingController extends AController <RankingInterface> {
 
-  constructor(private vendorController: VendorController) {
+  constructor(private _vendorController: VendorController) {
     super(RankingModel);
-    this.vendorController = vendorController;
   }
 ```
 
