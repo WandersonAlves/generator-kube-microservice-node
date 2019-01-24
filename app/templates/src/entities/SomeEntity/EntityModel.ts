@@ -9,6 +9,6 @@ const databaseSchema = new Schema({
   timestamps: true
 });
 
-const <%= modelName %> = model('<%= entityName %>', databaseSchema);
+const <%= modelName %> = model('<%= entityNameLowerCase %>', databaseSchema);
 
 export default <%= modelName %>;

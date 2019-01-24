@@ -31,7 +31,8 @@ module.exports = class extends Generator {
           businessName: `${answers.entityName}Business`,
           modelName: `${answers.entityName}Model`,
           interfaceName: `${answers.entityName}Interface`,
-          entityName: answers.entityName
+          entityName: answers.entityName,
+          entityNameLowerCase: answers.entityName.replace(/^\w/, c => c.toLowerCase())
         },
         null,
         {
