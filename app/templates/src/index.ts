@@ -6,11 +6,12 @@ import * as figlet from 'figlet';
 import Connection from './shared/class/Connection';
 
 import * as sourceMapSupport from 'source-map-support';
+import providers from './config/providers';
 
 sourceMapSupport.install();
 process.on('unhandledRejection', console.log);
 
-const mongoConn = new Connection();
+const mongoConn = providers.connection;
 
 middleware.initMiddlewares();
 router.initRoutes();

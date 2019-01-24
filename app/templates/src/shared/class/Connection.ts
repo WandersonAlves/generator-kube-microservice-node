@@ -33,6 +33,10 @@ export default class Connection {
     return this.db.close();
   }
 
+  getConnection() {
+    return this.db;
+  }
+
   run(cb) {
     if (this.db.readyState === 1) {
       cb(this.db);

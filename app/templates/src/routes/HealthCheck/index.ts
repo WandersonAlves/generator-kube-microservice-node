@@ -1,12 +1,12 @@
-import { connection } from 'mongoose';
 import { Router, Request, Response, NextFunction } from "express";
 import { INTERNAL_SERVER_ERROR, OK } from 'http-status-codes';
+import providers from "../../config/providers";
 
 const router = Router();
 
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await connection.db.admin().ping();
+    await providers.connection.getConnection().db.admin().ping();
     res.status(OK).send();
   }
   catch (err) {
