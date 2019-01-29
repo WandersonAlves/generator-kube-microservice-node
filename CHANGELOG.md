@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.0.1"></a>
+## [2.0.1](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.0.0...v2.0.1) (2019-01-29)
+
+
+### Bug Fixes
+
+* yeoman mv gitignore to npmignore ([0b45efd](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/0b45efd))
+
+
+
 <a name="2.0.0"></a>
 # [2.0.0](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v1.1.1...v2.0.0) (2019-01-29)
 
