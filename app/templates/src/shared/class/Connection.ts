@@ -6,8 +6,6 @@ export default class Connection {
 
   private db: MongoConnection;
 
-  constructor() {}
-
   connect(): Promise<this> {
     return new Promise(async (resolve, reject) => {
       try {
