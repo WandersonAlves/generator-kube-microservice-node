@@ -21,4 +21,4 @@ export default {
     server.use(notFound);
     server.use(exception);
   }
-}
+};

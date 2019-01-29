@@ -5,7 +5,7 @@ export interface IMongoModel {
   createdAt?: string;
   updatedAt?: string;
 }
-export type MongoOperations<T> = T | _mongoOperations<T>;
+export type MongoOperations<T> = T | MongoOperationsInternal<T>;
 
 /**
  * MongoMerger is all attrs from model + all logicalOperators on toplevel
@@ -13,7 +13,7 @@ export type MongoOperations<T> = T | _mongoOperations<T>;
  */
 export type MongoMerger<T> = MongoLogicalOperations<T> & {
   [P in keyof T]?: MongoOperations<T[P]>;
-}
+};
 
 export enum MongoBSONTypes {
   DOUBLE = 1,
@@ -41,16 +41,23 @@ export enum MongoBSONTypes {
 
 type geoJSONPoint = [number, number];
 
-type _mongoGeometries = {
-  type: 'Polygon' | 'Overview' | 'Point' | 'LineString' | 'MultiPoint' | 'MultiLineString' | 'MultiPolygon' | 'GeometryCollection',
-  coordinates?: geoJSONPoint | [geoJSONPoint] | [[geoJSONPoint]] | [[[geoJSONPoint]]]
+interface MongoGeometries {
+  type: 'Polygon' |
+  'Overview' |
+  'Point' |
+  'LineString' |
+  'MultiPoint' |
+  'MultiLineString' |
+  'MultiPolygon' |
+  'GeometryCollection';
+  coordinates?: geoJSONPoint | [geoJSONPoint] | [[geoJSONPoint]] | [[[geoJSONPoint]]];
   crs?: {
     type: 'name',
     properties: { name: 'urn:x-mongodb:crs:strictwinding:EPSG:4326' }
-  }
-  geometries?: _mongoGeometries
+  };
+  geometries?: MongoGeometries;
 }
-type MongoComparisonOperators<T> = {
+interface MongoComparisonOperators<T> {
   /**
    * Matches any of the values specified in an array.
    */
@@ -84,22 +91,23 @@ type MongoComparisonOperators<T> = {
    */
   $ne?: T;
 }
-type MongoArrayOperators<T> = {
+interface MongoArrayOperators<T> {
   /**
- * The $all operator selects the documents where the value of a field is an array that contains all the specified elements.
- */
+   * The $all operator selects the documents where the value of a field is an array that contains all the specified elements.
+   */
   $all?: T[];
   /**
-   * The $elemMatch operator matches documents that contain an array field with at least one element that matches all the specified query criteria.
+   * The $elemMatch operator matches documents that contain an array field with at least one element that matches all
+   * the specified query criteria.
    * If you specify only a single <query> condition in the $elemMatch expression, you do not need to use $elemMatch.
    */
-  $elemMatch?: _mongoOperations<T>;
+  $elemMatch?: MongoOperationsInternal<T>;
   /**
    * The $size operator matches any array with the number of elements specified by the argument.
    */
   $size?: number;
 }
-type MongoElementOperators = {
+interface MongoElementOperators {
   /**
    * Matches documents that have the specified field.
    */
@@ -109,7 +117,7 @@ type MongoElementOperators = {
    */
   $type?: number[];
 }
-type MongoEvaluationOperators = {
+interface MongoEvaluationOperators {
   /**
    * Performs a modulo operation on the value of a field and selects documents with a specified result.
    */
@@ -137,7 +145,8 @@ type MongoEvaluationOperators = {
      * The language that determines the list of stop words for the search and the rules for the stemmer and tokenizer.
      * If not specified, the search uses the default language of the index.
      * For supported languages, see Text Search Languages.
-     * If you specify a language value of "none", then the text search uses simple tokenization with no list of stop words and no stemming.
+     * If you specify a language value of "none",
+     * then the text search uses simple tokenization with no list of stop words and no stemming.
      */
     $language?: string,
     /**
@@ -150,7 +159,8 @@ type MongoEvaluationOperators = {
      * Optional.
      * A boolean flag to enable or disable diacritic sensitive search against version 3 text indexes.
      * Defaults to false; i.e. the search defers to the diacritic insensitivity of the text index.
-     * Text searches against earlier versions of the text index are inherently diacritic sensitive and cannot be diacritic insensitive.
+     * Text searches against earlier versions of the text index are
+     * inherently diacritic sensitive and cannot be diacritic insensitive.
      * As such, the $diacriticSensitive option has no effect with earlier versions of the text index.
      */
     $diacriticSensitive?: boolean
@@ -158,12 +168,12 @@ type MongoEvaluationOperators = {
   /**
    * Matches documents that satisfy a JavaScript expression.
    */
-  $where?: Function;
+  $where?: () => void;
 }
-type MongoGeospatialOperators = {
+interface MongoGeospatialOperators {
   $geoIntersects?: {
-    $geometry: _mongoGeometries
-  }
+    $geometry: MongoGeometries
+  };
   /**
    * Specifies a point for which a geospatial query returns the documents from nearest to farthest.
    * The $near operator can specify either a GeoJSON point or legacy coordinate point.
@@ -178,10 +188,11 @@ type MongoGeospatialOperators = {
     },
     $maxDistance: number;
     $minDistance: number;
-  }
+  };
   /**
    * Selects documents with geospatial data that exists entirely within a specified shape.
-   * The specified shape can be either a GeoJSON Polygon (either single-ringed or multi-ringed), a GeoJSON MultiPolygon, or a shape defined by legacy coordinate pairs. 
+   * The specified shape can be either a GeoJSON Polygon (either single-ringed or multi-ringed),
+   * a GeoJSON MultiPolygon, or a shape defined by legacy coordinate pairs.
    * The $geoWithin operator uses the $geometry operator to specify the GeoJSON object.
    */
   $geoWithin?: {
@@ -189,7 +200,7 @@ type MongoGeospatialOperators = {
       type: 'Polygon' | 'MultiPolygon',
       coordinates: [[geoJSONPoint]]
     }
-  }
+  };
   /**
    * Specifies a point for which a geospatial query returns the documents from nearest to farthest.
    * MongoDB calculates distances for $nearSphere using spherical geometry.
@@ -206,27 +217,27 @@ type MongoGeospatialOperators = {
     },
     $maxDistance: number;
     $minDistance: number;
-  }
+  };
 }
-type MongoLogicalOperations<T> = {
+interface MongoLogicalOperations<T> {
   /**
    * Joins query clauses with a logical AND returns all documents that match the conditions of both clauses.
    */
-  $and?: MongoMerger<T>[];
+  $and?: Array<MongoMerger<T>>;
   /**
    * Inverts the effect of a query expression and returns documents that do not match the query expression
    */
-  $not?: MongoMerger<T>[];
+  $not?: Array<MongoMerger<T>>;
   /**
    * Joins query clauses with a logical NOR returns all documents that fail to match both clauses.
    */
-  $nor?: MongoMerger<T>[];
+  $nor?: Array<MongoMerger<T>>;
   /**
    * Joins query clauses with a logical OR returns all documents that match the conditions of either clause.
    */
-  $or?: MongoMerger<T>[];
+  $or?: Array<MongoMerger<T>>;
 }
-interface _mongoOperations<T> extends
+interface MongoOperationsInternal<T> extends
   MongoComparisonOperators<T>,
   MongoGeospatialOperators,
   MongoArrayOperators<T>,

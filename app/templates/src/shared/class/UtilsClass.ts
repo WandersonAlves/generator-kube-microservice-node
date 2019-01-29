@@ -1,13 +1,13 @@
 import { Pagination } from "../interfaces/PaginationInterface";
 
 export default class UtilsClass {
-  constructor() { }
 
   getPaginationFromQueryParams(params: any) {
-    let pagination: Pagination = {
+    const pagination: Pagination = {
       limit: Number(params.limit),
       skip: Number(params.skip)
-    }
+    };
+
     if (isNaN(pagination.limit)) {
       delete pagination.limit;
     }
@@ -19,9 +19,10 @@ export default class UtilsClass {
   }
 
   getParamsFromQueryParams(params: any) {
-    let newParams = { ...params };
+    const newParams = { ...params };
+
     if (newParams.skip) {
-      delete newParams.skip
+      delete newParams.skip;
     }
     if (newParams.limit) {
       delete newParams.limit;

@@ -3,8 +3,6 @@ import router from './routes';
 import env from './config/env';
 import middleware from './shared/server/middlewares';
 import * as figlet from 'figlet';
-import Connection from './shared/class/Connection';
-
 import * as sourceMapSupport from 'source-map-support';
 import providers from './config/providers';
 

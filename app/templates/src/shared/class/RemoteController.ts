@@ -15,7 +15,7 @@ export default class RemoteController {
       (err: AxiosError) => {
         throw new UpstreamConnectionException({ url: err.config.url }, err.message);
       }
-    )
+    );
   }
 
   get(path: string, params?: {[attr: string]: any}): AxiosPromise<any> {
@@ -29,5 +29,4 @@ export default class RemoteController {
   put(path: string, params?: {[attr: string]: any}): AxiosPromise<any> {
     return this.axios.put(`${path}`, params);
   }
-
 }

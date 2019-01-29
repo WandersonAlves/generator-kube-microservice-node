@@ -2,8 +2,8 @@ import * as httpStatus from 'http-status-codes';
 
 export default class GenericException extends Error {
 
-  public statusCode: number;
-  public extras: any;
+  statusCode: number;
+  extras: any;
 
   constructor(params: { name: string, message: string, extras?: any, statusCode?: number}) {
     super(params.message);
@@ -20,6 +20,6 @@ export default class GenericException extends Error {
       message: this.message,
       statusCode: this.statusCode,
       extras: this.extras
-    }
+    };
   }
 }

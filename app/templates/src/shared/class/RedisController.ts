@@ -25,7 +25,6 @@ export default class RedisController {
         }
       }
       catch (err) {
-        console.error(err);
         reject(err);
       }
     });

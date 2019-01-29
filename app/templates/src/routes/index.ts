@@ -7,7 +7,7 @@ export default {
    * Start routes of server
    */
   initRoutes() {
-    server.use('/<%= entityName %>', <%= entityName %>);
+    server.use('/<%= entityNameLowerCase %>', <%= entityName %>);
     server.use('/health', HealthCheck);
   }
-}
+};

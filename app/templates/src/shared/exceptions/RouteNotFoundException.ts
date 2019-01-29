@@ -7,7 +7,7 @@ export default class RouteNotFoundException extends GenericException {
       name: 'RouteNotFoundException',
       message: `${req.originalUrl} doesn't exist on this server`,
       extras: `METHOD: ${req.method}`
-    }
+    };
     super(params);
 
     Object.setPrototypeOf(this, RouteNotFoundException.prototype);

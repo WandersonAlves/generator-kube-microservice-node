@@ -5,7 +5,7 @@ export default class MongoNotConnectedException extends GenericException {
     const params = {
       name: 'MongoNotConnectedException',
       message: 'Not connected to a mongo dabatase'
-    }
+    };
     super(params);
 
     Object.setPrototypeOf(this, MongoNotConnectedException.prototype);

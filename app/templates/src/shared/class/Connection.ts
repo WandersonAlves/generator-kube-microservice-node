@@ -16,7 +16,7 @@ export default class Connection {
         });
         this.db = connection;
         if (this.db.readyState !== 1) {
-          throw new MongoNotConnectedException;
+          throw new MongoNotConnectedException();
         }
         resolve(this);
       }
@@ -24,7 +24,7 @@ export default class Connection {
         reject(err);
         process.exit(1);
       }
-    })
+    });
   }
 
   disconnect(): Promise<any> {
@@ -40,7 +40,7 @@ export default class Connection {
       cb(this.db);
     }
     else {
-      throw new MongoNotConnectedException;
+      throw new MongoNotConnectedException();
     }
   }
 }
