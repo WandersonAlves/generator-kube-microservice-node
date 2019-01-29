@@ -1,17 +1,14 @@
-import{ OK }from 'http-status-codes';
+import { OK } from 'http-status-codes';
 import { Request, Response, NextFunction } from 'express';
+import withException from '../../shared/decorators/withException';
 
-import GenericException from '../../shared/exceptions/GenericException';
-import providers from '../../config/providers';
+export default class <%= businessName %> {
 
-const <%= controllerInstanceName %> = providers.<%= controllerInstanceName %>;
+  constructor(private <%= controllerInstanceName %>) {}
 
-export const get<%= entityName %>s = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const result = await <%= controllerInstanceName %>.find({});
+  @withException
+  async get<%= entityName %>s(req: Request, res: Response, next: NextFunction) {
+    const result = await this.<%= controllerInstanceName %>.find({});
     res.status(OK).send(result);
-  }
-  catch (err) {
-    next(new GenericException({ name: err.name, message: err.message }));
   }
 }

@@ -1,8 +1,10 @@
-import { get<%= entityName %>s } from './../../entities/<%= entityName %>/<%= businessName %>';
 import { Request, Response, NextFunction, Router } from 'express';
 import { check, validationResult } from 'express-validator/check';
 
 import UnprocessableEntityException from '../../shared/exceptions/UnprocessableEntityException';
+import providers from '../../config/providers';
+
+const <%= entityNameLowerCase %>Business = providers.<%= entityNameLowerCase %>Business;
 
 const router = Router();
 const checkEntityGet = [
@@ -15,7 +17,7 @@ router.get('/', checkEntityGet, (req: Request, res: Response, next: NextFunction
     next(new UnprocessableEntityException(errors.array()));
     return;
   }
-  get<%= entityName %>s(req, res, next);
+  <%= entityNameLowerCase %>Business.get<%= entityName %>s(req, res, next);
 });
 
 export default router;
