@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v1.1.1...v2.0.0) (2019-01-29)
+
+
+### Bug Fixes
+
+* remove hardcoded move ([8358a18](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/8358a18))
+
+
+### Features
+
+* add lint, test and husky hooks ([7fb95b2](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/7fb95b2))
+* add support for decorators. Business layer is a class now ([10b26fb](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/10b26fb))
+
+
+
 <a name="1.1.1"></a>
 ## [1.1.1](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v0.1.11...v1.1.1) (2019-01-24)
 
