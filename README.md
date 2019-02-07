@@ -45,7 +45,7 @@ This file have all methods necessary to operate on a mongoose model.
 
 Example code:
 
-```javascript
+```typescript
 export default SampleController extends AController<SomeInterface> {
   constructor() {
     super(SomeMongooseModel)
@@ -53,28 +53,34 @@ export default SampleController extends AController<SomeInterface> {
 }
 ```
 
-With your new controller, you can do these things (and more) in your BusinessLayer:
+With your new controller, you can do these things (and more) in your business layer (The business layer is instancied on `providers.ts` file):
 
-```javascript
-export const sampleBussinesMethod = async (req, res, next) => {
-  try {
-    // Find all documents within the collection
-    const result = await sampleController.findAll();
-    res.status(httpStatus.OK).send(result);
+```typescript
+export default class EntityBusiness {
+  constructor(
+    private entityController: EntityController,
+    private redisController?: RedisController
+  ) {
+    if (process.env.NODE_ENV !== 'test') {
+      this.redisController = new RedisController();
+    }
   }
-  catch (err) {
-    next(new GenericException({ name: err.name, message: err.message }));
+
+  @withException
+  async getEntityCount(req: Request, res: Response, next: NextFunction) {
+    const result = await this.entityController.getCount();
+    res.status(OK).send({ count: result });
   }
 }
 ```
 
-If you have custom behavior in your controller, just create new methods there.
+The `@withException` decorators is a decorator that provides a try/catch out of the box for the methods without logic on catch block. If you need custom behavior on a catch block, remove `@withException` of the method and write a raw try/catch block.
 
 Then, in the route definitions, use your business layer (see `src/routes/entityRoute/index.ts)
 
 With POST/PUT requests, you'll write something like this:
 
-```javascript
+```typescript
 const postChecking = [
   check('someFieldOnRequestBody').exists(),
 ];
@@ -85,7 +91,7 @@ router.post('/', postChecking, (req: Request, res: Response, next: NextFunction)
     next(new UnprocessableEntityException(errors.array()));
     return;
   }
-  entityBusinessMethod(req, res, next);
+  business.entityBusinessMethod(req, res, next);
 });
 ```
 
@@ -95,16 +101,14 @@ router.post('/', postChecking, (req: Request, res: Response, next: NextFunction)
 
 All exceptions that are catch by `src/shared/server/middlewares/exception.ts`, have `GenericException` as they base.
 
-So, just continuing throwning new Errors
+So, just continuing throwning new errors on the business and controller layers.
 
 
 ### Dependency Injection
 
 This template have a simple dependence injection on config/providers.ts. This file, handle all the controllers instances of application.
 
-Ex:
-
-```javascript
+```typescript
 import VendorController from "../entities/Vendor/VendorController";
 import RemoteController from "../shared/class/RemoteController";
 import RankingController from "../entities/Ranking/RankingController";
@@ -120,14 +124,16 @@ const providers = (() => {
   const utilsController = new UtilsClass;
   const pointsHistoryController = new PointsHistoryController();
   const gameficationController = new GameficationParamsController();
-
+  // This business has dependency on another controller
+  const productBusiness = new ProductBusiness(productController);
   return {
     vendorController,
     remoteController,
     rankingController,
     utilsController,
     pointsHistoryController,
-    gameficationController
+    gameficationController,
+    productBusiness
   }
 })();
 
@@ -136,7 +142,7 @@ export default providers;
 
 If your controller has another class dependency, create your class like this:
 
-```javascript
+```typescript
 export default class RankingController extends AController <RankingInterface> {
 
   constructor(private _vendorController: VendorController) {
@@ -144,24 +150,66 @@ export default class RankingController extends AController <RankingInterface> {
   }
 ```
 
-In your business file, use providers like this:
+## Docker and Kubernetes
 
-```javascript
-import providers from '../../config/providers';
+To build a docker image, you have to build the project using `npm run build`, then, use `npm run build:docker` and to publish, use `npm run publish:docker`. Remember to edit these commands if you use private repos.
 
-const rankingController = providers.rankingController;
-const remoteController = providers.remoteController;
-const utils = providers.utilsController;
-```
+The Kubernetes deployment file (`simple-deployment.yaml`), has a `LivenessProbe` that checks if the route `/health` returns 200. This route, pings to the database. If something goes wrong, your service will be restarted.
 
-This will ensure that you have only singleton classes running
-
-### Docker and Kubernetes
-
-To build a docker image, you have to build the project. Just use `npm run build:docker` and to publish, use `npm run publish:docker`. Remember to edit these commands if you use private repos.
-
-The Kubernetes deployment file (`simple-deployment.yaml`), has a `LivenessProbe` that checks if the route `/health` returns 200. This route, pings to the database, if something goes wrong, your service will be restarted. The deployment also has a `TimeZone` configuration that you can set the `TimeZone` of the running container. The default is pointing to America/Recife and you can change this anytime if you need.
+The deployment also has a `TimeZone` configuration that you can set the `TimeZone` of the running container. The default is pointing to America/Recife and you can change this anytime if you need.
 
 The load balancer file simples expose the `Deployment` to a `Load Balancer Service` running to the world on port 80 and binding the port 3000 of the `Deployment` to it.
 
 After configuring, you need to add the `Service` definition in a `ingress` controller or something else.
+
+Since this template uses Kubernetes, the `.dockerignore` and `Dockerfile` files **DOESN'T** have a reference to `.env`file (which, also is ignored on `.gitignore` file). The way we use here on @e3labs is setting a `envFrom` field on `simple-deployment.yaml`. Here is a example:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: e3-product-service
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: e3-product-service
+  template:
+    metadata:
+      labels:
+        app: e3-product-service
+    spec:
+      containers:
+      - name: redis-cache
+        image: redis:latest
+        ports:
+          - containerPort: 6379
+        resources:
+          limits:
+            cpu: "0.1"
+      - name: e3-product-service
+        image: <some-image>
+        ports:
+          - containerPort: 3000
+        envFrom:
+        - configMapRef:
+            name: env-config
+        livenessProbe:
+          initialDelaySeconds: 20
+          periodSeconds: 5
+          httpGet:
+            path: /health
+            port: 3000
+```
+
+
+## Development
+
+Clone this repo, then, use `npm link` or `yarn link generator-kube-microservice-node`. Now you can test this generator using `yo` locally.
+
+
+## Resources
+
+- https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/
+- https://www.sitepoint.com/javascript-decorators-what-they-are/
+- https://docs.mongodb.com/manual/reference/operator/query/
