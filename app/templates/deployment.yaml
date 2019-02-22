@@ -23,3 +23,17 @@ spec:
           httpGet:
             path: /health
             port: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: <%= projectName %>-alb
+  labels:
+    app: <%= projectName %>
+spec:
+  selector:
+    app: <%= projectName %>
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 3000

@@ -12,10 +12,7 @@
     "server": "node dist/index.js",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "watch:build": "npm run clean && tsc --watch",
-    "watch:server": "nodemon --inspect './dist/index.js' --watch './dist'",
-    "release:major": "changelog -M && git add CHANGELOG.md && git commit -m 'updated CHANGELOG.md' && npm version major && git push origin && git push origin --tags",
-    "release:minor": "changelog -m && git add CHANGELOG.md && git commit -m 'updated CHANGELOG.md' && npm version minor && git push origin && git push origin --tags",
-    "release:patch": "changelog -p && git add CHANGELOG.md && git commit -m 'updated CHANGELOG.md' && npm version patch && git push origin && git push origin --tags"
+    "watch:server": "nodemon --inspect './dist/index.js' --watch './dist'"
   },
   "license": "ISC",
   "dependencies": {
