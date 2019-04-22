@@ -5,7 +5,7 @@ import * as cors from 'cors';
 import * as compression from 'compression';
 import * as morgan from 'morgan';
 
-import exception from './exception';
+import exception from './Exception';
 import notFound from './404';
 
 export default {

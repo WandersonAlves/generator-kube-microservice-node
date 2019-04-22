@@ -27,7 +27,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: <%= projectName %>-alb
+  name: <%= projectName %>
   labels:
     app: <%= projectName %>
 spec:

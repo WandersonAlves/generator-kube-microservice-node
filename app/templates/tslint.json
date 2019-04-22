@@ -8,7 +8,7 @@
         "src/**/*.spec.ts",
         "src/shared/class/AbstractController.ts",
         "src/index.ts",
-        "src/shared/server/middlewares/exception.ts"
+        "src/shared/server/middlewares/Exception.ts"
       ]
     },
     "jsRules": {},

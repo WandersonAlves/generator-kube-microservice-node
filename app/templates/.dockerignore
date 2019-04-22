@@ -7,4 +7,5 @@ docker-compose*
 README.md
 LICENSE
 .vscode
-.env
+node_modules
+dist
