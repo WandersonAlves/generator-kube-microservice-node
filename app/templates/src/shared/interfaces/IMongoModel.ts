@@ -11,9 +11,7 @@ export type MongoOperations<T> = T | MongoOperationsInternal<T>;
  * MongoMerger is all attrs from model + all logicalOperators on toplevel
  * If you use attr as a object, all other expressions from mongo appear as $lt, $gte etc
  */
-export type MongoMerger<T> = MongoLogicalOperations<T> & {
-  [P in keyof T]?: MongoOperations<T[P]>;
-};
+export type MongoMerger<T> = { [P in keyof T]?: MongoOperations<T[P]> };
 
 export enum MongoBSONTypes {
   DOUBLE = 1,
@@ -36,24 +34,25 @@ export enum MongoBSONTypes {
   INTEGER64BITS,
   DECIMAL128,
   MINKEY = -1,
-  MAXKEY = 127
+  MAXKEY = 127,
 }
 
 type geoJSONPoint = [number, number];
 
 interface MongoGeometries {
-  type: 'Polygon' |
-  'Overview' |
-  'Point' |
-  'LineString' |
-  'MultiPoint' |
-  'MultiLineString' |
-  'MultiPolygon' |
-  'GeometryCollection';
+  type:
+    | 'Polygon'
+    | 'Overview'
+    | 'Point'
+    | 'LineString'
+    | 'MultiPoint'
+    | 'MultiLineString'
+    | 'MultiPolygon'
+    | 'GeometryCollection';
   coordinates?: geoJSONPoint | [geoJSONPoint] | [[geoJSONPoint]] | [[[geoJSONPoint]]];
   crs?: {
-    type: 'name',
-    properties: { name: 'urn:x-mongodb:crs:strictwinding:EPSG:4326' }
+    type: 'name';
+    properties: { name: 'urn:x-mongodb:crs:strictwinding:EPSG:4326' };
   };
   geometries?: MongoGeometries;
 }
@@ -139,7 +138,7 @@ interface MongoEvaluationOperators {
      * MongoDB performs a logical OR search of the terms unless specified as a phrase.
      * See Behavior for more information on the field.
      */
-    $search: string,
+    $search: string;
     /**
      * Optional.
      * The language that determines the list of stop words for the search and the rules for the stemmer and tokenizer.
@@ -148,13 +147,13 @@ interface MongoEvaluationOperators {
      * If you specify a language value of "none",
      * then the text search uses simple tokenization with no list of stop words and no stemming.
      */
-    $language?: string,
+    $language?: string;
     /**
      * Optional.
      * A boolean flag to enable or disable case sensitive search.
      * Defaults to false; i.e. the search defers to the case insensitivity of the text index.
      */
-    $caseSensitive?: boolean,
+    $caseSensitive?: boolean;
     /**
      * Optional.
      * A boolean flag to enable or disable diacritic sensitive search against version 3 text indexes.
@@ -163,7 +162,7 @@ interface MongoEvaluationOperators {
      * inherently diacritic sensitive and cannot be diacritic insensitive.
      * As such, the $diacriticSensitive option has no effect with earlier versions of the text index.
      */
-    $diacriticSensitive?: boolean
+    $diacriticSensitive?: boolean;
   };
   /**
    * Matches documents that satisfy a JavaScript expression.
@@ -172,7 +171,7 @@ interface MongoEvaluationOperators {
 }
 interface MongoGeospatialOperators {
   $geoIntersects?: {
-    $geometry: MongoGeometries
+    $geometry: MongoGeometries;
   };
   /**
    * Specifies a point for which a geospatial query returns the documents from nearest to farthest.
@@ -183,9 +182,9 @@ interface MongoGeospatialOperators {
    */
   $near?: {
     $geometry: {
-      type: 'Point',
-      coordinates: geoJSONPoint
-    },
+      type: 'Point';
+      coordinates: geoJSONPoint;
+    };
     $maxDistance: number;
     $minDistance: number;
   };
@@ -197,9 +196,9 @@ interface MongoGeospatialOperators {
    */
   $geoWithin?: {
     $geometry: {
-      type: 'Polygon' | 'MultiPolygon',
-      coordinates: [[geoJSONPoint]]
-    }
+      type: 'Polygon' | 'MultiPolygon';
+      coordinates: [[geoJSONPoint]];
+    };
   };
   /**
    * Specifies a point for which a geospatial query returns the documents from nearest to farthest.
@@ -212,9 +211,9 @@ interface MongoGeospatialOperators {
    */
   $nearSphere?: {
     $geometry: {
-      type: 'Point',
-      coordinates: geoJSONPoint
-    },
+      type: 'Point';
+      coordinates: geoJSONPoint;
+    };
     $maxDistance: number;
     $minDistance: number;
   };
@@ -223,24 +222,24 @@ interface MongoLogicalOperations<T> {
   /**
    * Joins query clauses with a logical AND returns all documents that match the conditions of both clauses.
    */
-  $and?: Array<MongoMerger<T>>;
+  $and?: MongoComparisonOperators<T>;
   /**
    * Inverts the effect of a query expression and returns documents that do not match the query expression
    */
-  $not?: Array<MongoMerger<T>>;
+  $not?: MongoComparisonOperators<T>;
   /**
    * Joins query clauses with a logical NOR returns all documents that fail to match both clauses.
    */
-  $nor?: Array<MongoMerger<T>>;
+  $nor?: MongoComparisonOperators<T>;
   /**
    * Joins query clauses with a logical OR returns all documents that match the conditions of either clause.
    */
-  $or?: Array<MongoMerger<T>>;
+  $or?: MongoComparisonOperators<T>;
 }
-interface MongoOperationsInternal<T> extends
-  MongoComparisonOperators<T>,
-  MongoGeospatialOperators,
-  MongoArrayOperators<T>,
-  MongoElementOperators,
-  MongoEvaluationOperators {
-}
+interface MongoOperationsInternal<T>
+  extends MongoComparisonOperators<T>,
+    MongoLogicalOperations<T>,
+    MongoGeospatialOperators,
+    MongoArrayOperators<T>,
+    MongoElementOperators,
+    MongoEvaluationOperators {}
