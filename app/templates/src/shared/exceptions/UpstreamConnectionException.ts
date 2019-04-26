@@ -1,12 +1,12 @@
-import GenericException from "./GenericException";
+import GenericException from './GenericException';
 
 export default class UpstreamConnectionException extends GenericException {
-  constructor(extras: any, message: string) {
+  constructor(extras: any, message: string, statusCode: number) {
     super({
       name: 'UpstreamConnectionException',
-      message: message || "Can't connect to on premises service",
-      statusCode: 500,
-      extras
+      message: message || "Can't connect to remote service",
+      statusCode: statusCode || 500,
+      extras,
     });
 
     Object.setPrototypeOf(this, UpstreamConnectionException.prototype);

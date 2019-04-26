@@ -3,43 +3,38 @@ import env from '../../config/env';
 import MongoNotConnectedException from '../exceptions/MongoNotConnectedException';
 
 export default class Connection {
-
   private db: MongoConnection;
 
   connect(): Promise<this> {
     return new Promise(async (resolve, reject) => {
       try {
-        await connect(`${env.mongodb_url}/${env.mongodb_database_name}${env.mongodb_extras}`, {
-          poolSize: 10,
-          bufferMaxEntries: 0,
-          bufferCommands: false
-        });
+        await connect(
+          `${env.mongodb_url}/${env.mongodb_database_name}`
+        );
         this.db = connection;
         if (this.db.readyState !== 1) {
           throw new MongoNotConnectedException();
         }
         resolve(this);
-      }
-      catch (err) {
+      } catch (err) {
         reject(err);
         process.exit(1);
       }
     });
   }
 
-  disconnect(): Promise<any> {
-    return this.db.close();
-  }
-
   getConnection() {
     return this.db;
+  }
+
+  disconnect(): Promise<any> {
+    return this.db.close();
   }
 
   run(cb) {
     if (this.db.readyState === 1) {
       cb(this.db);
-    }
-    else {
+    } else {
       throw new MongoNotConnectedException();
     }
   }
