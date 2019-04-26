@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.3](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.1.2...v2.1.3) (2019-04-26)
+
+
+### Features
+
+* add authorization middleware ([816dafd](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/816dafd))
+
+
+
 ## [2.1.2](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.1.1...v2.1.2) (2019-04-26)
 
 
