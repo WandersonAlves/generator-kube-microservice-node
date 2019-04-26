@@ -6,6 +6,7 @@ import * as compression from 'compression';
 import * as morgan from 'morgan';
 
 import exception from './Exception';
+import unauthorized from './Unauthorized';
 import notFound from './404';
 
 export default {
@@ -16,6 +17,7 @@ export default {
     if (process.env.NODE_ENV !== 'production') {
       server.use(morgan('tiny'));
     }
+    server.use(unauthorized);
   },
   initExceptionMiddlewares() {
     server.use(notFound);
