@@ -1,4 +1,4 @@
-FROM node:8.9-alpine
+FROM node:10.15-alpine
 ENV NODE_ENV production
 WORKDIR /api
 COPY ./build ./dist
