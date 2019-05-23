@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.5](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.1.4...v2.1.5) (2019-05-23)
+
+
+### Bug Fixes
+
+* add DELETE http verb to remoteController ([49e745e](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/49e745e))
+* add generics to remoteController ([f430df2](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/f430df2))
+* add missing service_auth property on env.ts ([07362f9](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/07362f9))
+
+
+
 ## [2.1.4](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.1.3...v2.1.4) (2019-04-26)
 
 
