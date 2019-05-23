@@ -18,3 +18,8 @@ server.listen(env.server_port, async () => {
   await mongoConn.connect();
   console.log(`Opening the gates in ${env.server_port}`);
 });
+
+process.on('SIGINT', () => {
+  mongoConn.disconnect();
+  process.exit(1);
+});
