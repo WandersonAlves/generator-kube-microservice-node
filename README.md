@@ -122,6 +122,13 @@ All exceptions that are catch by `src/shared/server/middlewares/exception.ts`, h
 
 So, just continuing throwning new errors on the business and controller layers that extends the `GenericException.ts`.
 
+### Service authorization
+
+In `src/shared/server/middlewares` you can find a `Unauthorized.ts` file that handles authorization logic of this service.
+
+Using this middleware, you should have another service with endpoint `/auth` that receives a `JWToken` via `Authorization` header.
+
+If that service responds with 200, you're authorized to procced with your request into this service.
 
 ### Dependency Injection
 
