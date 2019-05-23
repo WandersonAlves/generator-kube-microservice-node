@@ -41,4 +41,8 @@ export default class RemoteController {
   put<T>(path: string, params?: any, config?: AxiosRequestConfig): AxiosPromise<T> {
     return this.axios.put(path, params, config);
   }
+
+  delete<T>(path: string, config?: AxiosRequestConfig): AxiosPromise<T> {
+    return this.axios.delete(path, config);
+  }
 }
