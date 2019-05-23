@@ -15,5 +15,6 @@ export default {
   redis_url: process.env.REDIS_URL,
   onpremise_url: process.env.ONPREMISE_URL,
   onpremise_token: process.env.ONPREMISE_TOKEN,
-  app_token: process.env.APPLICATION_TOKEN
+  app_token: process.env.APPLICATION_TOKEN,
+  service_auth: process.env.SERVICE_AUTH
 }
