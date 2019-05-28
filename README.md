@@ -29,15 +29,9 @@ This template contains:
 - `yo kube-microservice-node`
 - Follow the inscructions
 
-## Requirements
-
-- nodemon (`npm i -g nodemon`)
-- [optional] changelog (`npm i -g generate-changelog`)
-
 ## How to run
 
-- On one terminal, run `npm run watch:build` to transpile .ts files to .js
-- On another terminal, run `npm run watch:server` to server transpiled .ts files with nodemon
+- Run `yarn dev` to spawn a nodemon server watching source files
 - Create a .env file in root. This file keep some important enviromment variables has:
   - PORT
   - MONGO_URL
