@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.6](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.1.5...v2.1.6) (2019-05-28)
+
+
+### Features
+
+* change running strategy ([7bee06f](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/7bee06f))
+
+
+
 ## [2.1.5](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.1.4...v2.1.5) (2019-05-23)
 
 
