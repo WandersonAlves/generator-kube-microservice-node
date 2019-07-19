@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.6](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.1.6...v2.2.6) (2019-07-19)
+
+
+### Bug Fixes
+
+* don't handle prettier in docs/ swagger/ ([8236046](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/8236046))
+* missing controller type ([e60fecb](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/e60fecb))
+* update nodemon.json ([698108d](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/698108d))
+
+
+### Features
+
+* add AuthException ([e8e22ac](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/e8e22ac))
+* add rabbitmq queue support ([6bece77](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/6bece77))
+* add swagger support via swagger-express-ts package ([641a009](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/641a009))
+
+
+
 ## [2.1.6](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.1.5...v2.1.6) (2019-05-28)
 
 
