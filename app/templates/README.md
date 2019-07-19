@@ -2,23 +2,30 @@
 
 Initial template for your services!.
 
-Has:
+Comes with:
 
 - `GenericException` base for all exceptions
 - `AController` for controllers extends from it
 - TypeScript
 - Dockerfile
+- RabbitMQ consumers/producers
+- Swagger endpoints using `swagger-express-ts` package
+- TSDoc with `typedoc` package
 - Kubernetes deployment config
-
-## Requirements
-
-- nodemon (`npm i -g nodemon`)
-- changelog (`npm i -g generate-changelog`)
 
 ## How to run
 
-- On one terminal, run `npm run watch:build` to transpile .ts files to .js
-- On another terminal, run `npm run watch:server` to server transpiled .ts files with nodemon
+- `yarn dev` will open a nodemon server watching for changing on your files
+
+## Common everyday commands
+
+- `yarn dev`: starts a nodemon server
+- `yarn build`: builds the project
+- `yarn build:webpack` (requires `yarn build`): build the project into a single file with webpack
+- `yarn build:docker`: builds a docker image of this service
+- `yarn publish:docker`: (requires `yarn build:docker`) push the docker image
+- `yarn format`: uses Prettier to format your code
+- `yarn release`: creates a new tag and changelog with a given release number
 
 ## Usage
 
@@ -79,4 +86,11 @@ router.post('/', postChecking, (req: Request, res: Response, next: NextFunction)
 
 All exceptions that are catch by `src/shared/server/middlewares/exception.ts`, have `GenericException` as they base.
 
-So, just continuing throwning new Errors
+Currently exceptions:
+
+- `AuthException`: should be throw on authentication errors
+- `EntityNotFoundException`: should be throw on not found queries
+- `MongoNotConnectedException`: internal exception for mongo errors
+- `RouteNotFoundException`: throw when you hit a route that doenst't exist
+- `UnprocessableEntityException`: should be throw on a entity can't be saved/updated
+- `UpstreamConnectionException`: internal exception for `RemoteController` exceptions
