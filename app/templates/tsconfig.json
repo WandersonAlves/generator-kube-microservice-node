@@ -2,22 +2,14 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
+    "types": ["reflect-metadata", "swagger-express-ts"],
     "outDir": "dist",
+    "moduleResolution": "node",
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "inlineSourceMap": true,
-    "lib": [
-      "es2017"
-    ]
+    "lib": ["es2017"]
   },
-  "files": [
-    "./node_modules/@types/node/index.d.ts"
-  ],
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.json",
-    "src/**/*.yaml"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.json", "src/**/*.yaml"],
+  "exclude": ["node_modules"]
 }
