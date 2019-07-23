@@ -1,10 +1,12 @@
 import { Request, Response, NextFunction, Router } from 'express';
 import { check, validationResult } from 'express-validator/check';
 
+import <%= businessName %> from '../../entities/<%= entityName %>/<%= businessName %>';
 import UnprocessableEntityException from '../../shared/exceptions/UnprocessableEntityException';
-import providers from '../../config/providers';
+import injectionContainer from '../../config/inversify.config';
+import REFERENCES from '../../config/inversify.references';
 
-const <%= entityNameLowerCase %>Business = providers.<%= entityNameLowerCase %>Business;
+const <%= entityNameLowerCase %>Business = injectionContainer.get<<%= businessName %>>(REFERENCES.<%= businessName %>);
 
 const router = Router();
 const checkEntityGet = [

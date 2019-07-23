@@ -1,8 +1,13 @@
 import { Request, Response } from 'express';
 import { UNAUTHORIZED } from 'http-status-codes';
-import providers from '../../../config/providers';
+
 import env from '../../../config/env';
 import GenericException from '../../exceptions/GenericException';
+import injectionContainer from '../../../config/inversify.config';
+import RemoteController from '../../class/RemoteController';
+import REFERENCES from '../../../config/inversify.references';
+
+const remoteController = injectionContainer.get<RemoteController>(REFERENCES.RemoteController);
 
 export default async (req: Request, res: Response, next) => {
   const { authorization } = req.headers;
@@ -11,7 +16,7 @@ export default async (req: Request, res: Response, next) => {
       next();
       return;
     }
-    await providers.remoteController.get(`${env.service_auth}/auth`, {
+    await remoteController.get(`${env.service_auth}/auth`, {
       headers: {
         Authorization: authorization,
       },

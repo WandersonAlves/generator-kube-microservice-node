@@ -1,12 +1,14 @@
-import { Pagination } from './../interfaces/PaginationInterface';
+import { Pagination } from '../interfaces/PaginationInterface';
 import { Document, Model } from "mongoose";
 import { IMongoModel, MongoMerger } from "../interfaces/IMongoModel";
+import { injectable } from 'inversify';
 
 type InterfaceBoolean<T> = {
   [P in keyof T]?: boolean;
 }
 
-export class AController<Interface extends IMongoModel> {
+@injectable()
+export class BaseController<Interface extends IMongoModel> {
 
   private _model: Model<Document>;
 

@@ -3,12 +3,14 @@ import router from './routes';
 import env from './config/env';
 import middleware from './shared/server/middlewares';
 import * as sourceMapSupport from 'source-map-support';
-import providers from './config/providers';
+import injectionContainer from './config/inversify.config';
+import Connection from './shared/class/Connection';
+import REFERENCES from './config/inversify.references';
 
 sourceMapSupport.install();
 process.on('unhandledRejection', console.log);
 
-const mongoConn = providers.connection;
+const mongoConn = injectionContainer.get<Connection>(REFERENCES.Connection);
 
 middleware.initMiddlewares();
 router.initRoutes();

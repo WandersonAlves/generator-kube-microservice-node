@@ -1,7 +1,9 @@
 import { connect, connection, Connection as MongoConnection } from 'mongoose';
 import env from '../../config/env';
 import MongoNotConnectedException from '../exceptions/MongoNotConnectedException';
+import { injectable } from 'inversify';
 
+@injectable()
 export default class Connection {
   private db: MongoConnection;
 

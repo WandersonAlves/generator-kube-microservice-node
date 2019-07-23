@@ -1,7 +1,9 @@
 import { createClient, RedisClient } from 'redis';
 import { promisify } from 'util';
 import env from '../../config/env';
+import { injectable } from 'inversify';
 
+@injectable()
 export default class RedisController {
   private client: RedisClient;
   private getAsync;

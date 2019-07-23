@@ -1,5 +1,7 @@
 import { Pagination } from "../interfaces/PaginationInterface";
+import { injectable } from 'inversify';
 
+@injectable()
 export default class UtilsClass {
 
   getPaginationFromQueryParams(params: any) {

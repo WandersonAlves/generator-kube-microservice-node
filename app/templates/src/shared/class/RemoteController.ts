@@ -5,7 +5,9 @@ import axios, {
   AxiosRequestConfig,
 } from 'axios';
 import UpstreamConnectionException from '../exceptions/UpstreamConnectionException';
+import { injectable } from 'inversify';
 
+@injectable()
 export default class RemoteController {
   private axios: AxiosInstance;
 
