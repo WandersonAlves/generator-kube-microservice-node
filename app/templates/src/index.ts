@@ -1,8 +1,10 @@
-import server from './shared/server';
-import router from './routes';
-import env from './config/env';
-import middleware from './shared/server/middlewares';
+import 'reflect-metadata';
 import * as sourceMapSupport from 'source-map-support';
+
+import { InversifyExpressServer } from 'inversify-express-utils';
+
+import env from './config/env';
+import middleware from './shared/middlewares';
 import injectionContainer from './config/inversify.config';
 import Connection from './shared/class/Connection';
 import REFERENCES from './config/inversify.references';
@@ -10,13 +12,21 @@ import REFERENCES from './config/inversify.references';
 sourceMapSupport.install();
 process.on('unhandledRejection', console.log);
 
+const server = new InversifyExpressServer(injectionContainer);
 const mongoConn = injectionContainer.get<Connection>(REFERENCES.Connection);
 
-middleware.initMiddlewares();
-router.initRoutes();
-middleware.initExceptionMiddlewares();
+server.setConfig(app => {
+  middleware.initMiddlewares(app);
+  middleware.initCustomRoutes(app);
+});
 
-server.listen(env.server_port, async () => {
+server.setErrorConfig(app => {
+  middleware.initExceptionMiddlewares(app);
+});
+
+const bootstrapedServer = server.build();
+
+bootstrapedServer.listen(env.server_port, async () => {
   await mongoConn.connect();
   console.log(`Opening the gates in ${env.server_port}`);
 });

@@ -37,8 +37,8 @@ module.exports = class extends Generator {
         {
           projectName: answers.projectName,
           controllerName: `${answers.entityName}Controller`,
-          controllerInstanceName: `${answers.entityName.replace(/^\w/, c => c.toLowerCase())}Controller`,
-          businessName: `${answers.entityName}Business`,
+          serviceInstanceName: `${answers.entityName.replace(/^\w/, c => c.toLowerCase())}Service`,
+          serviceName: `${answers.entityName}Service`,
           modelName: `${answers.entityName}Model`,
           interfaceName: `${answers.entityName}Interface`,
           entityName: answers.entityName,
@@ -57,12 +57,8 @@ module.exports = class extends Generator {
         this.destinationPath(`./src/entities/${answers.entityName}`)
       )
       this.fs.move(
-        this.destinationPath('./src/routes/entityRoute/**'),
-        this.destinationPath(`./src/routes/${answers.entityName}`)
-      )
-      this.fs.move(
-        this.destinationPath(`./src/entities/${answers.entityName}/EntityBusiness.ts`),
-        this.destinationPath(`./src/entities/${answers.entityName}/${answers.entityName}Business.ts`)
+        this.destinationPath(`./src/entities/${answers.entityName}/EntityService.ts`),
+        this.destinationPath(`./src/entities/${answers.entityName}/${answers.entityName}Service.ts`)
       )
       this.fs.move(
         this.destinationPath(`./src/entities/${answers.entityName}/EntityController.ts`),

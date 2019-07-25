@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-import GenericException from '../../exceptions/GenericException';
+import GenericException from '../exceptions/GenericException';
 
 export default function(
   err: GenericException,
