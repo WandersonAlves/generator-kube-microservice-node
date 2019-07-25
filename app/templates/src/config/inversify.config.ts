@@ -9,7 +9,7 @@ import <%= serviceName %> from '../entities/<%= entityName %>/<%= serviceName %>
 import <%= entityNameLowerCase %>Model from '../entities/<%= entityName %>/<%= modelName %>';
 import RemoteController from '../shared/class/RemoteController';
 
-const injectionContainer = new Container();
+const injectionContainer = new Container({ defaultScope: 'Singleton' });
 
 injectionContainer.bind(REFERENCES.Connection).to(Connection);
 injectionContainer.bind(REFERENCES.RemoteController).to(RemoteController);
