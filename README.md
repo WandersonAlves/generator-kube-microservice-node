@@ -21,6 +21,8 @@ This template contains:
 - `GenericException` base for all exceptions
 - `withException` decorator to abstract error handling logic (used on generated controllers)
 - `RemoteController` class to handle `axios` requets
+- `RabbitMQ` consumers and producers logic
+- `inversifyjs`, `inversify-express-utils` and `swagger-express-ts` packages
 
 ## Install
 
@@ -41,74 +43,45 @@ Edit `src/config/env.ts` with your current needs
 
 ## Usage
 
-### Route > Business > Controller
+### Controllers
 
-The point of most interest in this boilerplate is the `src/shared/class/AbstractController.ts` file.
-This file have all methods necessary to operate on a mongoose model.
+Controllers of this boilerplate are handled by `inversify-express-utils` package.
 
-Example code:
-
-```typescript
-export default SampleController extends AController<SomeInterface> {
-  constructor() {
-    super(SomeMongooseModel)
-  }
-}
-```
-
-With your new controller, you can do these things (and more) in your business layer (The business layer is instancied on `providers.ts` file):
+Here is a exemple:
 
 ```typescript
-export default class EntityBusiness {
-  constructor(
-    private entityController: EntityController,
-    private redisController?: RedisController
-  ) {}
+@controller('/tenant')
+export default class TenantController {
+  @inject(REFERENCES.TenantService) private tenantService: TenantService;
 
+  @ApiOperationGet({
+    description: 'Get a list of available Tenants',
+    summary: 'Get a list of available Tenants',
+    responses: {
+      200: {
+        description: 'Success',
+        type: SwaggerDefinitionConstant.Response.Type.ARRAY,
+        model: 'Tenant',
+      },
+    },
+  })
+  @httpGet('/')
   @withException
-  async getEntityCount(req: Request, res: Response, next: NextFunction) {
-    const result = await this.entityController.getCount();
-    res.status(OK).send({ count: result });
+  async getTenants(@response() res: Response) {
+    const result = await this.tenantService.find({});
+    res.status(OK).send(result);
   }
-}
 ```
 
-As you can see above, the `EntityBusiness` class can have a `RedisController` on constructor. Connection with Redis is a problem when testing, so, you can do this on `env.ts`
+Everything is injected by `inversify` and the composition root lives in `src/config/inversify.config.ts`.
 
-```typescript
-const redisController = process.env.NODE_ENV !== 'test' ? new RedisController() : null;
-const productController = new ProductController(priceController, stockController, redisController);
-```
+Inside the composition root, we import all controllers and `inversifyjs` takes care to setup our application (as seen on `src/index.ts`)
 
-And run the test with:
-```json
-"scripts": {
-    "test": "NODE_ENV=test mocha -r ts-node/register src/**/*.spec.ts"
-}
-```
+### Services
 
-The `@withException` decorator is a decorator that provides a try/catch out of the box for the methods without logic on catch block. If you need custom behavior on a catch block, remove `@withException` of the method and write a raw try/catch block.
+The service layer extends the `BaseController<T>` which has all methods to handle the mongoose model.
 
-In your routes definitions, use your business layer (see `src/routes/entityRoute/index.ts)
-
-With POST/PUT requests, you'll write something like this:
-
-```typescript
-const postChecking = [
-  body('someFieldOnRequestBody').exists(),
-];
-
-router.post('/', postChecking, (req: Request, res: Response, next: NextFunction) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    next(new UnprocessableEntityException(errors.array()));
-    return;
-  }
-  business.entityBusinessMethod(req, res, next);
-});
-```
-
-> `check(str: String)` and `validationResult(req: Request)` are from `express-validator/check` package.
+If your service don't use mongoose, you can create a new `BaseController` with your needs. Just remember that the controller should receive a model or similar to operate
 
 ### Exceptions
 
@@ -126,48 +99,39 @@ If that service responds with 200, you're authorized to procced with your reques
 
 ### Dependency Injection
 
-This template have a simple dependence injection on config/providers.ts. This file, handle all the controllers instances of application.
+This template uses `inversifyjs` to handle DI with a IoC container.
+The file that handles that is `src/config/inversify.config.ts`
 
 ```typescript
-import VendorController from "../entities/Vendor/VendorController";
-import RemoteController from "../shared/class/RemoteController";
-import RankingController from "../entities/Ranking/RankingController";
-import UtilsClass from "../shared/class/UtilsClass";
-import PointsHistoryController from "../entities/PointsHistory/PointsHistoryController";
-import GameficationParamsController from "../entities/GameficationParams/GameficationParamsController";
+import '../entities/Tenant/TenantController';
+import '../shared/middlewares/HealthCheck';
 
-const providers = (() => {
-  const vendorController = new VendorController();
-  const remoteController = new RemoteController();
-  // This controller has dependency on another controller
-  const rankingController = new RankingController(vendorController);
-  const utilsController = new UtilsClass;
-  const pointsHistoryController = new PointsHistoryController();
-  const gameficationController = new GameficationParamsController();
-  // This business has dependency on another controller
-  const productBusiness = new ProductBusiness(productController);
-  return {
-    vendorController,
-    remoteController,
-    rankingController,
-    utilsController,
-    pointsHistoryController,
-    gameficationController,
-    productBusiness
-  }
-})();
+import { Container } from 'inversify';
 
-export default providers;
+import REFERENCES from './inversify.references';
+import Connection from '../shared/class/Connection';
+import TenantService from '../entities/Tenant/TenantService';
+import tenantModel from '../entities/Tenant/TenantModel';
+import RemoteController from '../shared/class/RemoteController';
+
+const injectionContainer = new Container({ defaultScope: 'Singleton' });
+
+injectionContainer.bind(REFERENCES.Connection).to(Connection);
+injectionContainer.bind(REFERENCES.RemoteController).to(RemoteController);
+injectionContainer.bind(REFERENCES.TenantService).to(TenantService);
+
+injectionContainer.bind(REFERENCES.TenantModel).toConstantValue(tenantModel);
+
+export default injectionContainer;
+
 ```
 
-If your controller has another class dependency, create your class like this:
+If your controller has another class dependency, inject the dependency onto your class like this:
 
 ```typescript
-export default class RankingController extends AController <RankingInterface> {
-
-  constructor(private _vendorController: VendorController) {
-    super(RankingModel);
-  }
+export default class TenantController {
+  @inject(REFERENCES.TenantService) private tenantService: TenantService;
+}
 ```
 
 ## Docker and Kubernetes
@@ -217,8 +181,6 @@ spec:
             port: 3000
 ```
 
-
-
 # Contributing
 
 PR's and new issues are welcome. Anything you think that'll be great to this project will be discussed.
@@ -226,3 +188,13 @@ PR's and new issues are welcome. Anything you think that'll be great to this pro
 ## Development
 
 Clone this repo, then, `npm install` and `npm link`. Now you can test this generator locally using `yo` command.
+
+# Acknowledgements
+
+Many thanks for the folks that worked hard on:
+
+- `inversifyjs` (https://github.com/inversify/InversifyJS)
+- `inversify-express-utils` (https://github.com/inversify/inversify-express-utils)
+- `swagger-express-ts` (https://github.com/olivierlsc/swagger-express-ts)
+
+Without these libs, this boilerplate doesn't exists
