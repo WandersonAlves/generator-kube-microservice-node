@@ -61,6 +61,10 @@ module.exports = class extends Generator {
         this.destinationPath(`./src/entities/${answers.entityName}/${answers.entityName}Service.ts`)
       )
       this.fs.move(
+        this.destinationPath(`./src/swaggerModels/EntitySwaggerModel.ts`),
+        this.destinationPath(`./src/swaggerModels/${answers.entityName}SwaggerModel.ts`)
+      )
+      this.fs.move(
         this.destinationPath(`./src/entities/${answers.entityName}/EntityController.ts`),
         this.destinationPath(`./src/entities/${answers.entityName}/${answers.entityName}Controller.ts`)
       )

@@ -1,4 +1,4 @@
-// import '../../swaggerModels/<%= entityName %>SwaggerModel';
+import '../../swaggerModels/<%= entityName %>SwaggerModel';
 
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
@@ -26,22 +26,22 @@ export default {
     server.use(exception);
   },
   initCustomRoutes(server) {
-    // server.use('/<%= entityNameLowerCase %>/api-docs/swagger', express.static('swagger'));
-    // server.use('/<%= entityNameLowerCase %>/docs', express.static('docs'));
-    // server.use(
-    //   '/api-docs/swagger/assets',
-    //   express.static('node_modules/swagger-ui-dist'),
-    // );
-    // server.use(
-    //   swagger.express({
-    //     definition: {
-    //       info: {
-    //         title: '<%= projectName %>',
-    //         version: '0.0.1',
-    //       },
-    //       basePath: '/<%= entityNameLowerCase %>',
-    //     },
-    //   }),
-    // );
+    server.use('/<%= entityNameLowerCase %>/api-docs/swagger', express.static('swagger'));
+    server.use('/<%= entityNameLowerCase %>/docs', express.static('docs'));
+    server.use(
+      '/api-docs/swagger/assets',
+      express.static('node_modules/swagger-ui-dist'),
+    );
+    server.use(
+      swagger.express({
+        definition: {
+          info: {
+            title: '<%= projectName %>',
+            version: '0.0.1',
+          },
+          basePath: '/<%= entityNameLowerCase %>',
+        },
+      }),
+    );
   },
 };
