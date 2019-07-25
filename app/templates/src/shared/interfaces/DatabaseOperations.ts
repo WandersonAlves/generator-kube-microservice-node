@@ -5,7 +5,7 @@ export interface DatabaseOperations<T> {
    * Persist a given entity to database
    * @param entity
    */
-  save(entity: T): Promise<T>;
+  insert(entity: T): Promise<T>;
   /**
    * Finds a entity by ID
    * @param id Can be a string or number
@@ -61,5 +61,5 @@ export interface DatabaseOperations<T> {
    * Inserts multiple entities
    * @param entities
    */
-  saveMultiple(entities: T[]): Promise<T[]>;
+  insertMany(entities: T[]): Promise<T[]>;
 }

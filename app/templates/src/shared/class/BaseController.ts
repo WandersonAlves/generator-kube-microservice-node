@@ -18,7 +18,7 @@ export class BaseController<Interface extends IMongoModel>
    * Saves the new Mongoose Model
    * @param entity A object that matchs a mongoose schema
    */
-  save(entity: Interface): Promise<Interface> {
+  insert(entity: Interface): Promise<Interface> {
     const model: Document = new this._model(entity);
     return model.save() as any;
   }
@@ -92,7 +92,7 @@ export class BaseController<Interface extends IMongoModel>
    * Save multiple documents
    * @param entities Array os objects to save
    */
-  saveMultiple(entities: Interface[]): Promise<Interface[]> {
+  insertMany(entities: Interface[]): Promise<Interface[]> {
     return this._model.insertMany(entities) as any;
   }
 }
