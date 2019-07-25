@@ -1,6 +1,6 @@
 {
   "name": "<%= projectName %>",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "format:test": "yarn prettier -- --config .prettierrc -c 'src/**/*.ts'",
     "server": "node dist/index.js",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "start:dev": "ts-node src/index.ts",
+    "start:dev": "node --inspect=0.0.0.0:9229 -r ts-node/register ./src/index.ts",
     "dev": "nodemon",
     "release": "standard-version --release-as"
   },
