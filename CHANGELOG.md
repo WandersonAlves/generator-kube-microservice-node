@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [2.3.0](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.2.7...v2.3.0) (2019-07-30)
+
+
+### Bug Fixes
+
+* unable to use vscode debugger ([438cbfd](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/438cbfd))
+* use singleton scope on IoC ([ddb77bd](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/ddb77bd))
+
+
+### Features
+
+* enable by default swagger endpoint ([69c5a32](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/69c5a32))
+* use inversify-express-utils to setup express application ([ab1222e](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/ab1222e))
+
+
+
 ## [2.2.7](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.2.6...v2.2.7) (2019-07-23)
 
 
