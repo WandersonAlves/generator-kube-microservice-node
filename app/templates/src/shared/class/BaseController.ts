@@ -1,25 +1,37 @@
 import { Pagination } from '../interfaces/PaginationInterface';
-import { Document, Model } from 'mongoose';
+import { Document, Model, Schema } from 'mongoose';
 import { IMongoModel, MongoMerger } from '../interfaces/IMongoModel';
-import { injectable } from 'inversify';
+import { injectable, inject, unmanaged } from 'inversify';
 import { DatabaseOperations } from '../interfaces/DatabaseOperations';
 
-type InterfaceBoolean<T> = { [P in keyof T]?: boolean };
+import REFERENCES from '../../config/inversify.references';
+import Connection from './Connection';
+
+type InterfaceBoolean<T> = {
+  [P in keyof T]?: boolean;
+};
 
 @injectable()
 export class BaseController<Interface extends IMongoModel>
   implements DatabaseOperations<Interface> {
-  private _model: Model<Document>;
+  @inject(REFERENCES.Connection) private _connection: Connection;
 
-  constructor(model: Model<Document>) {
+  private _model: Model<Document>;
+  private _modelSchema: Schema<Interface>;
+  private _defaultDB: string;
+
+  constructor(model: Model<Document>, @unmanaged() modelSchema: Schema<Interface>, @unmanaged() defaultDB: string) {
     this._model = model;
+    this._modelSchema = modelSchema;
+    this._defaultDB = defaultDB;
   }
   /**
    * Saves the new Mongoose Model
    * @param entity A object that matchs a mongoose schema
    */
-  insert(entity: Interface): Promise<Interface> {
-    const model: Document = new this._model(entity);
+  insert(entity: Interface, databaseName?: string): Promise<Interface> {
+    const _model = this._getModel(databaseName);
+    const model: Document = new _model(entity);
     return model.save() as any;
   }
   /**
@@ -27,8 +39,13 @@ export class BaseController<Interface extends IMongoModel>
    * @param id A ObjectId from Mongoose schema
    * @returns A Promise with a single Document
    */
-  findById(id: string, lean: boolean = true): Promise<Interface> {
-    return this._model.findById({ _id: id }).lean(lean) as any;
+  findById(
+    id: string,
+    lean: boolean = true,
+    databaseName?: string,
+  ): Promise<Interface> {
+    const _model = this._getModel(databaseName);
+    return _model.findById({ _id: id }).lean(lean) as any;
   }
   /**
    * Finds multiple Documents
@@ -46,8 +63,10 @@ export class BaseController<Interface extends IMongoModel>
       fieldsToShow?: InterfaceBoolean<Interface>;
     },
     lean: boolean = true,
+    databaseName?: string,
   ): Promise<Interface[]> {
-    return this._model
+    const _model = this._getModel(databaseName);
+    return _model
       .find(params.filter, params.fieldsToShow, params.pagination)
       .sort(params.sort)
       .lean(lean) as any;
@@ -68,31 +87,58 @@ export class BaseController<Interface extends IMongoModel>
       fieldsToShow?: InterfaceBoolean<Interface>;
     },
     lean: boolean = true,
+    databaseName?: string,
   ): Promise<Interface> {
-    return this._model
+    const _model = this._getModel(databaseName);
+    return _model
       .findOne(params.filter, params.fieldsToShow, params.pagination)
       .sort(params.sort)
-      .lean() as any;
+      .lean(lean) as any;
   }
   /**
    * Deletes a Mongoose Document
    * @param id A ObjectId from Mongoose schema
    */
-  delete(id: string, lean: boolean = true): Promise<Interface> {
-    return this._model.deleteOne({ _id: id }).lean(lean) as any;
+  delete(
+    id: string,
+    lean: boolean = true,
+    databaseName?: string,
+  ): Promise<Interface> {
+    const _model = this._getModel(databaseName);
+    return _model.deleteOne({ _id: id }).lean(lean) as any;
   }
   /**
    * Updates a Document
    * @param params A object that matchs a mongoose schema with a currently know ObjectId
    */
-  update(params: Interface): Promise<Interface> {
-    return this._model.findByIdAndUpdate(params._id, params, { new: true }) as any;
+  update(
+    params: Interface,
+    databaseName?: string,
+  ): Promise<Interface> {
+    const _model = this._getModel(databaseName);
+    return _model.findByIdAndUpdate(params._id, params, { new: true }) as any;
   }
   /**
    * Save multiple documents
    * @param entities Array os objects to save
    */
-  insertMany(entities: Interface[]): Promise<Interface[]> {
-    return this._model.insertMany(entities) as any;
+  insertMany(
+    entities: Interface[],
+    databaseName?: string,
+  ): Promise<Interface[]> {
+    const _model = this._getModel(databaseName);
+    return _model.insertMany(entities) as any;
+  }
+  /**
+   * Gets a model instance from a given database
+   * @param databaseName database name
+   */
+  private _getModel(databaseName: string = this._defaultDB): Model<Document, any> {
+    let _model = this._model;
+    if (databaseName) {
+      const conn = this._connection.useDB(databaseName);
+      _model = conn.model(this._model.modelName, this._modelSchema);
+    }
+    return _model;
   }
 }
