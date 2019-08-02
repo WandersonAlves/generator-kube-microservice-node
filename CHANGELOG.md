@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.1](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.0...v2.3.1) (2019-08-02)
+
+
+### Bug Fixes
+
+* remove unused imports ([dbd599a](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/dbd599a))
+
+
+### Features
+
+* add support for switing databases ([1f41ed7](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/1f41ed7))
+
+
+
 # [2.3.0](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.2.7...v2.3.0) (2019-07-30)
 
 
