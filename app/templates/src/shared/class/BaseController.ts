@@ -1,3 +1,5 @@
+import { Request } from 'express';
+import { validationResult } from 'express-validator/check';
 import { Pagination } from '../interfaces/PaginationInterface';
 import { Document, Model, Schema } from 'mongoose';
 import { IMongoModel, MongoMerger } from '../interfaces/IMongoModel';
@@ -7,14 +9,14 @@ import { DatabaseOperations } from '../interfaces/DatabaseOperations';
 import REFERENCES from '../../config/inversify.references';
 import Connection from './Connection';
 import env from '../../config/env';
+import UnprocessableEntityException from '../exceptions/UnprocessableEntityException';
 
 type InterfaceBoolean<T> = {
   [P in keyof T]?: boolean;
 };
 
 @injectable()
-export class BaseController<Interface extends IMongoModel>
-  implements DatabaseOperations<Interface> {
+export class BaseController<Interface extends IMongoModel> implements DatabaseOperations<Interface> {
   @inject(REFERENCES.Connection) private _connection: Connection;
 
   private _model: Model<Document>;
@@ -40,11 +42,7 @@ export class BaseController<Interface extends IMongoModel>
    * @param id A ObjectId from Mongoose schema
    * @returns A Promise with a single Document
    */
-  findById(
-    id: string,
-    lean: boolean = true,
-    databaseName?: string,
-  ): Promise<Interface> {
+  findById(id: string, lean: boolean = true, databaseName?: string): Promise<Interface> {
     const _model = this._getModel(databaseName);
     return _model.findById({ _id: id }).lean(lean) as any;
   }
@@ -100,11 +98,7 @@ export class BaseController<Interface extends IMongoModel>
    * Deletes a Mongoose Document
    * @param id A ObjectId from Mongoose schema
    */
-  delete(
-    id: string,
-    lean: boolean = true,
-    databaseName?: string,
-  ): Promise<Interface> {
+  delete(id: string, lean: boolean = true, databaseName?: string): Promise<Interface> {
     const _model = this._getModel(databaseName);
     return _model.deleteOne({ _id: id }).lean(lean) as any;
   }
@@ -112,10 +106,7 @@ export class BaseController<Interface extends IMongoModel>
    * Updates a Document
    * @param params A object that matchs a mongoose schema with a currently know ObjectId
    */
-  update(
-    params: Interface,
-    databaseName?: string,
-  ): Promise<Interface> {
+  update(params: Interface, databaseName?: string): Promise<Interface> {
     const _model = this._getModel(databaseName);
     return _model.findByIdAndUpdate(params._id, params, { new: true }) as any;
   }
@@ -123,12 +114,21 @@ export class BaseController<Interface extends IMongoModel>
    * Save multiple documents
    * @param entities Array os objects to save
    */
-  insertMany(
-    entities: Interface[],
-    databaseName?: string,
-  ): Promise<Interface[]> {
+  insertMany(entities: Interface[], databaseName?: string): Promise<Interface[]> {
     const _model = this._getModel(databaseName);
     return _model.insertMany(entities) as any;
+  }
+  /**
+   * Validates a request using `express-validator`
+   * The valiation will be made against the `inversify-express-utils` decorator
+   * If request has errors, it will throw a UnprocessableEntityException error
+   */
+  validateRequest(req: Request): void {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      throw new UnprocessableEntityException(errors.array());
+    }
+    return;
   }
   /**
    * Gets a model instance from a given database
