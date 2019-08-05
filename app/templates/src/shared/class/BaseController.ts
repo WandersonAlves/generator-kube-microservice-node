@@ -6,6 +6,7 @@ import { DatabaseOperations } from '../interfaces/DatabaseOperations';
 
 import REFERENCES from '../../config/inversify.references';
 import Connection from './Connection';
+import env from '../../config/env';
 
 type InterfaceBoolean<T> = {
   [P in keyof T]?: boolean;
@@ -20,10 +21,10 @@ export class BaseController<Interface extends IMongoModel>
   private _modelSchema: Schema<Interface>;
   private _defaultDB: string;
 
-  constructor(model: Model<Document>, @unmanaged() modelSchema: Schema<Interface>, @unmanaged() defaultDB: string) {
+  constructor(model: Model<Document>, @unmanaged() modelSchema: Schema<Interface>) {
     this._model = model;
     this._modelSchema = modelSchema;
-    this._defaultDB = defaultDB;
+    this._defaultDB = env.mongodb_database_name;
   }
   /**
    * Saves the new Mongoose Model
