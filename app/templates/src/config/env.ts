@@ -16,5 +16,6 @@ export default {
   onpremise_url: process.env.ONPREMISE_URL,
   onpremise_token: process.env.ONPREMISE_TOKEN,
   app_token: process.env.APPLICATION_TOKEN,
-  service_auth: process.env.SERVICE_AUTH
-}
+  service_auth: process.env.SERVICE_AUTH,
+  rabbitmq_url: process.env.RABBITMQ_URL,
+};
