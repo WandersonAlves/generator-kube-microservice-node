@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.3](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.1...v2.3.3) (2019-08-07)
+
+
+### Bug Fixes
+
+* add rabbitmq_url on env ([de19e38](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/de19e38))
+* set printWidth: 130 ([d86dd03](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/d86dd03))
+* workaround to .gitignore renamed ([875ea4c](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/875ea4c)), closes [#1](https://github.com/WandersonAlves/generator-kube-microservice-node/issues/1)
+
+
+### Features
+
+* add remaining CRUD methods ([1f068c6](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/1f068c6)), closes [#4](https://github.com/WandersonAlves/generator-kube-microservice-node/issues/4)
+* add request validation on BaseController ([cd4d4d9](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/cd4d4d9))
+
+
+
 ## [2.3.1](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.0...v2.3.1) (2019-08-02)
 
 
