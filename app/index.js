@@ -51,7 +51,10 @@ module.exports = class extends Generator {
           }
         }
       );
-      // rename entity folder
+      this.fs.move(
+        this.destinationPath('./gitignore'),
+        this.destinationPath('./.gitignore')
+      )
       this.fs.move(
         this.destinationPath('./src/entities/SomeEntity/**'),
         this.destinationPath(`./src/entities/${answers.entityName}`)
