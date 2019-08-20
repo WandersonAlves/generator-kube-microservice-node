@@ -59,7 +59,7 @@ export default class <%= controllerName %> {
     res.status(CREATED).send(new<%= entityName %>);
   }
 
-  @httpPost('/', ..._createEdit<%= entityName %>Validator)
+  @httpPut('/', ..._createEdit<%= entityName %>Validator)
   @withException
   async put<%= entityName %>(@request() req: Request, @response() res: Response, @requestBody() <%= entityNameLowerCase %>: <%= interfaceName %>) {
     this.<%= serviceInstanceName %>.validateRequest(req);
