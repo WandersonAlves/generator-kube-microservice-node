@@ -4,17 +4,15 @@ import axios, {
   AxiosError,
   AxiosRequestConfig,
 } from 'axios';
-import UpstreamConnectionException from '../exceptions/UpstreamConnectionException';
 import { injectable } from 'inversify';
+import UpstreamConnectionException from '../exceptions/UpstreamConnectionException';
 
 @injectable()
 export default class RemoteController {
   private axios: AxiosInstance;
 
-  constructor(remoteServiceAddress?: string) {
-    this.axios = axios.create({
-      baseURL: remoteServiceAddress,
-    });
+  constructor() {
+    this.axios = axios.create({});
 
     this.axios.interceptors.request.use(request => {
       return request;
@@ -24,7 +22,7 @@ export default class RemoteController {
       response => response,
       (err: AxiosError) => {
         throw new UpstreamConnectionException(
-          { url: err.config.url },
+          { url: err.config.url, error: err.response ? err.response.data : null },
           err.message,
           err.response.status,
         );
