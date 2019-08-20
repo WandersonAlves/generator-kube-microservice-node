@@ -7,6 +7,9 @@ export default class AuthException extends GenericException {
       name: 'AuthException',
       message: message || 'JWT expired or not received',
       statusCode: UNAUTHORIZED,
+      extras: {
+        help: "Maybe you forget to setup the Unauthorized file"
+      }
     };
     super(params);
 

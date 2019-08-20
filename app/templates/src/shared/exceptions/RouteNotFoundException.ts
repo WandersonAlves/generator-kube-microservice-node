@@ -7,7 +7,9 @@ export default class RouteNotFoundException extends GenericException {
     const params = {
       name: 'RouteNotFoundException',
       message: `${req.originalUrl} doesn't exist on this server`,
-      extras: `Method: ${req.method}`,
+      extras: {
+        help: `Method: ${req.method}`,
+      },
       statusCode: NOT_FOUND,
     };
     super(params);
