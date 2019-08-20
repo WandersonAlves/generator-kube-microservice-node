@@ -19,6 +19,7 @@ export default class Connection {
         }
         resolve(this);
       } catch (err) {
+        console.error(err);
         reject(err);
         process.exit(1);
       }
