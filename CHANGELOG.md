@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.4](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.3...v2.3.4) (2019-08-20)
+
+
+### Bug Fixes
+
+* add console.error on connection class error ([cfd0c00](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/cfd0c00))
+* remove string constructor from remoteController ([6bb768b](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/6bb768b))
+* use httpPut decorator on putEntityName ([60db8c1](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/60db8c1))
+
+
+### Features
+
+* add helper fields on some exceptions ([901220b](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/901220b))
+
+
+
 ## [2.3.3](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.1...v2.3.3) (2019-08-07)
 
 
