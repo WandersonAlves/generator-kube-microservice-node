@@ -1,16 +1,9 @@
 {
   "defaultSeverity": "error",
-  "extends": ["tslint:recommended"],
-  "linterOptions": {
-    "exclude": [
-      "src/**/*.spec.ts",
-      "src/shared/class/AbstractController.ts",
-      "src/index.ts",
-      "src/shared/server/middlewares/Exception.ts"
-    ]
-  },
+  "extends": ["tslint:recommended", "tslint-config-prettier"],
   "jsRules": {},
   "rules": {
+    "sort-imports": true,
     "no-console": false,
     "quotemark": false,
     "one-line": false,
@@ -18,11 +11,6 @@
     "ordered-imports": false,
     "object-literal-sort-keys": false,
     "trailing-comma": false,
-    "max-line-length": {
-      "options": {
-        "limit": 130
-      }
-    },
     "arrow-parens": false,
     "variable-name": {
       "options": ["allow-leading-underscore"]
@@ -31,9 +19,10 @@
       "options": ["no-public"]
     },
     "no-unused-expression": true,
-    "import-spacing": true,
     "no-require-imports": true,
     "interface-name": false
   },
-  "rulesDirectory": []
+  "rulesDirectory": [
+    "tslint-misc-rules"
+  ]
 }
