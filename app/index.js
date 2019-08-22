@@ -20,12 +20,8 @@ module.exports = class extends Generator {
       }
     ]).then((answers) => {
       console.log(
-        "Remember to check Docker image on package.json (in case you use private repo)"
-      );
-      console.log(
-        "Remember to run `yarn format` to let prettier format your code"
-      );
-      console.log(
+        "Remember to check Docker image on package.json (in case you use private repo)",
+        "Remember to run `yarn format` and `yarn lint --fix` to let prettier and tslint format/analyse your code",
         "Also, remember to put a .env file on root repo with your secrets"
       );
       // create destination folder
@@ -89,5 +85,4 @@ module.exports = class extends Generator {
       })
     });
   }
-
 };
