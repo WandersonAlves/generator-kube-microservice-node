@@ -38,6 +38,13 @@ export enum MongoBSONTypes {
 }
 
 type geoJSONPoint = [number, number];
+/**
+ * $in and $nin operators uses a array of the generic T to match values,
+ * but, if the type is already a array, we don't want to have a T[][]
+ *
+ * So, this type ensures that if the T is T[] or just T, the final type on $in and $nin operators is T[]
+ */
+type UnarrayNested<T> = T extends Array<infer U> ? U[] : T[];
 
 interface MongoGeometries {
   type:
@@ -60,11 +67,11 @@ interface MongoComparisonOperators<T> {
   /**
    * Matches any of the values specified in an array.
    */
-  $in?: T[];
+  $in?: UnarrayNested<T>;
   /**
    * Matches none of the values specified in an array.
    */
-  $nin?: T[];
+  $nin?: UnarrayNested<T>;
   /**
    * Matches values that are equal to a specified value.
    */
@@ -114,7 +121,7 @@ interface MongoElementOperators {
   /**
    * Selects documents if a field is of the specified type.
    */
-  $type?: number[];
+  $type?: MongoBSONTypes;
 }
 interface MongoEvaluationOperators {
   /**
