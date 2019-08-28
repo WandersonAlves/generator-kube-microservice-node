@@ -4,7 +4,6 @@ import { Pagination } from '../interfaces/PaginationInterface';
 import { Document, Model, Schema } from 'mongoose';
 import { IMongoModel, MongoMerger } from '../interfaces/IMongoModel';
 import { injectable, inject, unmanaged } from 'inversify';
-import { DatabaseOperations } from '../interfaces/DatabaseOperations';
 
 import REFERENCES from '../../config/inversify.references';
 import Connection from './Connection';
@@ -12,16 +11,18 @@ import env from '../../config/env';
 import UnprocessableEntityException from '../exceptions/UnprocessableEntityException';
 
 type InterfaceBoolean<T> = { [P in keyof T]?: boolean };
+type InterfacePagination<T> = { [P in keyof T]?: 1 | -1 };
+type InterfacePropertiesToString<T> = keyof T;
 
 @injectable()
-export class BaseController<Interface extends IMongoModel> implements DatabaseOperations<Interface> {
+export class BaseController<Interface extends IMongoModel> {
   @inject(REFERENCES.Connection) private _connection: Connection;
 
   private _model: Model<Document>;
   private _modelSchema: Schema<Interface>;
   private _defaultDB: string;
 
-  constructor(model: Model<Document>, @unmanaged() modelSchema: Schema<Interface>) {
+  constructor(@unmanaged() model: Model<Document>, @unmanaged() modelSchema: Schema<Interface>) {
     this._model = model;
     this._modelSchema = modelSchema;
     this._defaultDB = env.mongodb_database_name;
@@ -65,7 +66,7 @@ export class BaseController<Interface extends IMongoModel> implements DatabaseOp
     params: {
       filter?: Partial<MongoMerger<Interface>>;
       pagination?: Pagination;
-      sort?: string;
+      sort?: InterfacePagination<Interface>;
       fieldsToShow?: InterfaceBoolean<Interface>;
     },
     lean: boolean = true,
@@ -81,7 +82,6 @@ export class BaseController<Interface extends IMongoModel> implements DatabaseOp
    * Finds the first Document that matchs the params
    * @param params Allowed Params: filter, pagination, sort, fieldsToShow
    * @param params.filter Object used to filter Documents
-   * @param params.pagination Object with skip, limit properties to control pagination
    * @param params.fieldsToShow Object containing the fields to return from the Documents
    * @param lean Sets the lean option.
    * Documents returned from queries with the lean option enabled are plain javascript objects, not MongooseDocuments.
@@ -92,8 +92,6 @@ export class BaseController<Interface extends IMongoModel> implements DatabaseOp
   findOne(
     params: {
       filter?: Partial<MongoMerger<Interface>>;
-      pagination?: Pagination;
-      sort?: string;
       fieldsToShow?: InterfaceBoolean<Interface>;
     },
     lean: boolean = true,
@@ -101,8 +99,7 @@ export class BaseController<Interface extends IMongoModel> implements DatabaseOp
   ): Promise<Interface> {
     const _model = this._getModel(databaseName);
     return _model
-      .findOne(params.filter, params.fieldsToShow, params.pagination)
-      .sort(params.sort)
+      .findOne(params.filter)
       .lean(lean) as any;
   }
   /**
@@ -143,6 +140,14 @@ export class BaseController<Interface extends IMongoModel> implements DatabaseOp
   count(filter: Partial<MongoMerger<Interface>>, databaseName?: string): Promise<number> {
     const _model = this._getModel(databaseName);
     return _model.count(filter) as any;
+  }
+  /**
+   * Return a distinct operation
+   * @param field A string representing a field from [[Interface]]
+   * @param filter Object used to filter Documents
+   */
+  distinct(field: InterfacePropertiesToString<Interface>, filter: Partial<MongoMerger<Interface>> = {}): Promise<any> {
+    return this._model.distinct(field as string, filter) as any;
   }
   /**
    * Validates a request using `express-validator`
