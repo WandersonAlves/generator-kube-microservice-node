@@ -1,13 +1,12 @@
-import { Request } from 'express';
-import { validationResult } from 'express-validator/check';
-import { Pagination } from '../interfaces/PaginationInterface';
 import { Document, Model, Schema } from 'mongoose';
 import { IMongoModel, MongoMerger } from '../interfaces/IMongoModel';
 import { injectable, inject, unmanaged } from 'inversify';
-
-import REFERENCES from '../../config/inversify.references';
+import { Pagination } from '../interfaces/PaginationInterface';
+import { Request } from 'express';
+import { validationResult } from 'express-validator/check';
 import Connection from './Connection';
 import env from '../../config/env';
+import REFERENCES from '../../config/inversify.references';
 import UnprocessableEntityException from '../exceptions/UnprocessableEntityException';
 
 type InterfaceBoolean<T> = { [P in keyof T]?: boolean };
@@ -40,15 +39,21 @@ export class BaseController<Interface extends IMongoModel> {
   /**
    * Finds a Document by ObjectId
    * @param id A ObjectId from Mongoose schema
-   * @param lean Sets the lean option.
+   * @param extras.lean Sets the lean option.
    * Documents returned from queries with the lean option enabled are plain javascript objects, not MongooseDocuments.
    * They have no save method, getters/setters or other Mongoose magic applied.
-   * @param databaseName Set this to query on another database in the current mongo connection
+   * @param extras.databaseName Set this to query on another database in the current mongo connection
    * @returns A Promise with a single Document
    */
-  findById(id: string, lean: boolean = true, databaseName?: string): Promise<Interface> {
-    const _model = this._getModel(databaseName);
-    return _model.findById({ _id: id }).lean(lean) as any;
+  findById(
+    id: string,
+    extras: {
+      lean?: boolean;
+      databaseName?: string;
+    } = { lean: true },
+  ): Promise<Interface> {
+    const _model = this._getModel(extras.databaseName);
+    return _model.findById({ _id: id }).lean(extras.lean) as any;
   }
   /**
    * Finds multiple Documents
@@ -56,10 +61,10 @@ export class BaseController<Interface extends IMongoModel> {
    * @param params.filter Object used to filter Documents
    * @param params.pagination Object with skip, limit properties to control pagination
    * @param params.fieldsToShow Object containing the fields to return from the Documents
-   * @param lean Sets the lean option.
+   * @param extras.lean Sets the lean option.
    * Documents returned from queries with the lean option enabled are plain javascript objects, not MongooseDocuments.
    * They have no save method, getters/setters or other Mongoose magic applied.
-   * @param databaseName Set this to query on another database in the current mongo connection
+   * @param extras.databaseName Set this to query on another database in the current mongo connection
    * @returns A Promise with a Array of Documents found
    */
   find(
@@ -69,24 +74,26 @@ export class BaseController<Interface extends IMongoModel> {
       sort?: InterfacePagination<Interface>;
       fieldsToShow?: InterfaceBoolean<Interface>;
     },
-    lean: boolean = true,
-    databaseName?: string,
+    extras: {
+      lean?: boolean;
+      databaseName?: string;
+    } = { lean: true },
   ): Promise<Interface[]> {
-    const _model = this._getModel(databaseName);
+    const _model = this._getModel(extras.databaseName);
     return _model
       .find(params.filter, params.fieldsToShow, params.pagination)
       .sort(params.sort)
-      .lean(lean) as any;
+      .lean(extras.lean) as any;
   }
   /**
    * Finds the first Document that matchs the params
    * @param params Allowed Params: filter, pagination, sort, fieldsToShow
    * @param params.filter Object used to filter Documents
    * @param params.fieldsToShow Object containing the fields to return from the Documents
-   * @param lean Sets the lean option.
+   * @param extras.lean Sets the lean option.
    * Documents returned from queries with the lean option enabled are plain javascript objects, not MongooseDocuments.
    * They have no save method, getters/setters or other Mongoose magic applied.
-   * @param databaseName Set this to query on another database in the current mongo connection
+   * @param extras.databaseName Set this to query on another database in the current mongo connection
    * @returns A Promise with a single Document
    */
   findOne(
@@ -94,25 +101,31 @@ export class BaseController<Interface extends IMongoModel> {
       filter?: Partial<MongoMerger<Interface>>;
       fieldsToShow?: InterfaceBoolean<Interface>;
     },
-    lean: boolean = true,
-    databaseName?: string,
+    extras: {
+      lean?: boolean;
+      databaseName?: string;
+    } = { lean: true },
   ): Promise<Interface> {
-    const _model = this._getModel(databaseName);
-    return _model
-      .findOne(params.filter)
-      .lean(lean) as any;
+    const _model = this._getModel(extras.databaseName);
+    return _model.findOne(params.filter).lean(extras.lean) as any;
   }
   /**
    * Deletes a Mongoose Document
    * @param id A ObjectId from Mongoose schema
-   * @param lean Sets the lean option.
+   * @param extras.lean Sets the lean option.
    * Documents returned from queries with the lean option enabled are plain javascript objects, not MongooseDocuments.
    * They have no save method, getters/setters or other Mongoose magic applied.
-   * @param databaseName Set this to query on another database in the current mongo connection
+   * @param extras.databaseName Set this to query on another database in the current mongo connection
    */
-  delete(id: string, lean: boolean = true, databaseName?: string): Promise<Interface> {
-    const _model = this._getModel(databaseName);
-    return _model.deleteOne({ _id: id }).lean(lean) as any;
+  delete(
+    id: string,
+    extras: {
+      lean?: boolean;
+      databaseName?: string;
+    } = { lean: true },
+  ): Promise<Interface> {
+    const _model = this._getModel(extras.databaseName);
+    return _model.deleteOne({ _id: id }).lean(extras.lean) as any;
   }
   /**
    * Updates a Document
@@ -145,9 +158,15 @@ export class BaseController<Interface extends IMongoModel> {
    * Return a distinct operation
    * @param field A string representing a field from [[Interface]]
    * @param filter Object used to filter Documents
+   * @param databaseName Set this to query on another database in the current mongo connection
    */
-  distinct(field: InterfacePropertiesToString<Interface>, filter: Partial<MongoMerger<Interface>> = {}): Promise<any> {
-    return this._model.distinct(field as string, filter) as any;
+  distinct(
+    field: InterfacePropertiesToString<Interface>,
+    filter: Partial<MongoMerger<Interface>> = {},
+    databaseName?: string,
+  ): Promise<any> {
+    const _model = this._getModel(databaseName);
+    return _model.distinct(field as string, filter) as any;
   }
   /**
    * Validates a request using `express-validator`
