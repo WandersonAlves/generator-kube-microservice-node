@@ -17,6 +17,9 @@
       "address": "localhost",
       "localRoot": "${workspaceFolder}",
       "remoteRoot": "/usr/src/service",
+      "sourceMapPathOverrides": {
+        "/usr/src/service/*": "${workspaceRoot}/*"
+      },
       "protocol": "inspector",
       "restart": true
     }
