@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.7](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.6...v2.3.7) (2019-09-03)
+
+
+### Bug Fixes
+
+* add extras parameter ([9a36647](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/9a36647))
+* broken debugger ([a1fca20](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/a1fca20))
+
+
+
 ## [2.3.6](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.5...v2.3.6) (2019-08-28)
 
 
