@@ -14,5 +14,10 @@ module.exports = {
       hiredis: path.join(__dirname, 'aliases/hiredis.js'),
     },
   },
-  plugins: [new CopyPlugin([{ from: 'node_modules/saslprep/code-points.mem', to: '' }])],
+  plugins: [
+    new CopyPlugin([
+      { from: 'node_modules/saslprep/code-points.mem', to: '' },
+      { from: '<FILE_NAME>', to: '' },
+    ]),
+  ],
 };

@@ -1,12 +1,15 @@
-import { Channel } from 'amqplib';
 import * as amqp from 'amqplib';
+import * as fs from 'fs';
+import { Channel } from 'amqplib';
 
 /**
  * Creates a RabbitMQ channel
  * @param rabbitmqURL RabbitMQ URL
  */
 const createRabbitMQChannel = async (rabbitmqURL: string) => {
-  const connection = await amqp.connect(rabbitmqURL);
+  const connection = await amqp.connect(rabbitmqURL, {
+    ca: [process.env.NODE_ENV === 'production' ? fs.readFileSync('./<FILE_PATH>') : null],
+  });
   const channel = await connection.createChannel();
   return channel;
 };
