@@ -134,7 +134,7 @@ export class BaseController<Interface extends IMongoModel> {
    */
   update(params: Interface, databaseName?: string): Promise<Interface> {
     const _model = this._getModel(databaseName);
-    return _model.findByIdAndUpdate(params._id, params, { new: true }) as any;
+    return _model.updateOne({ _id: params._id }, params) as any;
   }
   /**
    * Save multiple documents
