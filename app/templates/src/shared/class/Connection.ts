@@ -11,9 +11,12 @@ export default class Connection {
   connect(): Promise<this> {
     return new Promise(async (resolve, reject) => {
       try {
-        this.db = await createConnection(
-          `${env.mongodb_url}/${env.mongodb_database_name}`,
-        );
+        this.db = await createConnection(`${env.mongodb_url}`, {
+          authSource: env.mongodb_authsource,
+          ssl: true,
+          replicaSet: env.mongodb_replset,
+          dbName: env.mongodb_database_name,
+        });
         if (this.db.readyState !== 1) {
           throw new MongoNotConnectedException();
         }
