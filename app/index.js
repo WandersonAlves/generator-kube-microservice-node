@@ -5,6 +5,12 @@ module.exports = class extends Generator {
   constructor(args, opts) {
     super(args, opts);
   }
+
+  _capitalize(str) {
+    const str2 = str.toLowerCase();
+    return str2.charAt(0).toUpperCase() + str2.slice(1)
+  }
+
   start() {
     this.prompt([
       {
@@ -31,12 +37,12 @@ module.exports = class extends Generator {
         this.destinationPath('./'),
         {
           projectName: answers.projectName,
-          controllerName: `${answers.entityName}Controller`,
+          controllerName: `${this._capitalize(answers.entityName)}Controller`,
           serviceInstanceName: `${answers.entityName.replace(/^\w/, c => c.toLowerCase())}Service`,
-          serviceName: `${answers.entityName}Service`,
-          modelName: `${answers.entityName}Model`,
-          interfaceName: `${answers.entityName}Interface`,
-          entityName: answers.entityName,
+          serviceName: `${this._capitalize(answers.entityName)}Service`,
+          modelName: `${this._capitalize(answers.entityName)}Model`,
+          interfaceName: `${this._capitalize(answers.entityName)}Interface`,
+          entityName: this._capitalize(answers.entityName),
           entityNameLowerCase: answers.entityName.replace(/^\w/, c => c.toLowerCase())
         },
         null,
@@ -52,27 +58,27 @@ module.exports = class extends Generator {
       )
       this.fs.move(
         this.destinationPath('./src/entities/SomeEntity/**'),
-        this.destinationPath(`./src/entities/${answers.entityName}`)
+        this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}`)
       )
       this.fs.move(
-        this.destinationPath(`./src/entities/${answers.entityName}/EntityService.ts`),
-        this.destinationPath(`./src/entities/${answers.entityName}/${answers.entityName}Service.ts`)
+        this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}/EntityService.ts`),
+        this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}/${this._capitalize(answers.entityName)}Service.ts`)
       )
       this.fs.move(
         this.destinationPath(`./src/swaggerModels/EntitySwaggerModel.ts`),
-        this.destinationPath(`./src/swaggerModels/${answers.entityName}SwaggerModel.ts`)
+        this.destinationPath(`./src/swaggerModels/${this._capitalize(answers.entityName)}SwaggerModel.ts`)
       )
       this.fs.move(
-        this.destinationPath(`./src/entities/${answers.entityName}/EntityController.ts`),
-        this.destinationPath(`./src/entities/${answers.entityName}/${answers.entityName}Controller.ts`)
+        this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}/EntityController.ts`),
+        this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}/${this._capitalize(answers.entityName)}Controller.ts`)
       )
       this.fs.move(
-        this.destinationPath(`./src/entities/${answers.entityName}/EntityModel.ts`),
-        this.destinationPath(`./src/entities/${answers.entityName}/${answers.entityName}Model.ts`)
+        this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}/EntityModel.ts`),
+        this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}/${this._capitalize(answers.entityName)}Model.ts`)
       )
       this.fs.move(
-        this.destinationPath(`./src/entities/${answers.entityName}/EntityInterface.ts`),
-        this.destinationPath(`./src/entities/${answers.entityName}/${answers.entityName}Interface.ts`)
+        this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}/EntityInterface.ts`),
+        this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}/${this._capitalize(answers.entityName)}Interface.ts`)
       )
       this.composeWith(require.resolve('generator-git-init/generators/app'))
       this.installDependencies({
