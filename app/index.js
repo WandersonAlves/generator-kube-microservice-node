@@ -1,5 +1,4 @@
 'use strict';
-require('generator-git-init');
 const Generator = require('yeoman-generator');
 
 module.exports = class extends Generator {
@@ -20,8 +19,8 @@ module.exports = class extends Generator {
       }
     ]).then((answers) => {
       console.log(
-        "Remember to check Docker image on package.json (in case you use private repo)",
-        "Remember to run `yarn format` and `yarn lint --fix` to let prettier and tslint format/analyse your code",
+        "Remember to check Docker image on package.json and deployment.yaml (in case you use private repo)",
+        "If you will use the queue files, ensure that put a cert file somewhere if you run on production env",
         "Also, remember to put a .env file on root repo with your secrets"
       );
       // create destination folder
@@ -75,9 +74,7 @@ module.exports = class extends Generator {
         this.destinationPath(`./src/entities/${answers.entityName}/EntityInterface.ts`),
         this.destinationPath(`./src/entities/${answers.entityName}/${answers.entityName}Interface.ts`)
       )
-      this.composeWith('git-init', {}, {
-        local: require.resolve('generator-git-init')
-      })
+      this.composeWith(require.resolve('generator-git-init/generators/app'))
       this.installDependencies({
         yarn: true,
         npm: false,

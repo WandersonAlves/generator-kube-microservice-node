@@ -17,7 +17,8 @@
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "start:dev": "node --inspect=0.0.0.0:9229 -r ts-node/register ./src/index.ts",
     "dev": "nodemon",
-    "release": "standard-version --release-as"
+    "release": "standard-version --release-as",
+    "postinstall": "yarn format && yarn lint --fix"
   },
   "license": "ISC",
   "dependencies": {
