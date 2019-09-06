@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.8](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.7...v2.3.8) (2019-09-06)
+
+
+### Bug Fixes
+
+* mongoose deprecation warning ([e45ced9](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/e45ced9))
+* stop using global generator-git-init ([a64442f](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/a64442f)), closes [#7](https://github.com/WandersonAlves/generator-kube-microservice-node/issues/7)
+* use env.ts to build mongo connection ([3a6a83b](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/3a6a83b))
+
+
+### Features
+
+* add optional cert on production ([a5e52f9](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/a5e52f9))
+
+
+
 ## [2.3.7](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.6...v2.3.7) (2019-09-03)
 
 
