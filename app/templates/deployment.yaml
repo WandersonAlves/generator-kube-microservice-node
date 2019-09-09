@@ -17,6 +17,15 @@ spec:
         image: <%= projectName %>:latest
         ports:
           - containerPort: 3000
+        readinessProbe:
+          initialDelaySeconds: 5
+          periodSeconds: 3
+          successThreshold: 1
+          failureThreshold: 1
+          timeoutSeconds: 1
+          httpGet:
+            port: 3000
+            path: /health
         livenessProbe:
           initialDelaySeconds: 20
           periodSeconds: 5
