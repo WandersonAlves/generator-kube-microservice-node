@@ -45,7 +45,6 @@
     "inversify": "^5.0.1",
     "inversify-express-utils": "^6.3.2",
     "mocha": "^5.2.0",
-    "mongodb": "^3.0.4",
     "mongoose": "^5.1.7",
     "morgan": "^1.9.0",
     "nodemon": "^1.19.1",
@@ -71,7 +70,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn run lint && pretty-quick --staged",
+      "pre-commit": "yarn lint --fix && pretty-quick --staged",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   }
