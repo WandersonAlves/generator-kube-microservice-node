@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.9](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.8...v2.3.9) (2019-09-13)
+
+
+### Bug Fixes
+
+* **generator:** force capitalized entityName ([5411e9a](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/5411e9a))
+* **kubernetes:** add envFrom ([26f1cbd](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/26f1cbd))
+* **kubernetes:** add missing readinessProbe ([88f27fd](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/88f27fd))
+* **mongo:** don't use ssl, authsource, replset on dev ([699d0ac](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/699d0ac))
+
+
+
 ## [2.3.8](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.7...v2.3.8) (2019-09-06)
 
 
