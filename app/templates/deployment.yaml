@@ -17,6 +17,9 @@ spec:
         image: <%= projectName %>:latest
         ports:
           - containerPort: 3000
+        envFrom:
+          - configMapRef:
+              name: env-config
         readinessProbe:
           initialDelaySeconds: 5
           periodSeconds: 3
