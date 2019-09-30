@@ -1,10 +1,6 @@
-import axios, {
-  AxiosPromise,
-  AxiosInstance,
-  AxiosError,
-  AxiosRequestConfig,
-} from 'axios';
 import { injectable } from 'inversify';
+import { INTERNAL_SERVER_ERROR } from 'http-status-codes';
+import axios, { AxiosPromise, AxiosInstance, AxiosError, AxiosRequestConfig } from 'axios';
 import UpstreamConnectionException from '../exceptions/UpstreamConnectionException';
 
 @injectable()
@@ -24,7 +20,7 @@ export default class RemoteController {
         throw new UpstreamConnectionException(
           { url: err.config.url, error: err.response ? err.response.data : null },
           err.message,
-          err.response.status,
+          err.response ? err.response.status : INTERNAL_SERVER_ERROR,
         );
       },
     );
