@@ -12,9 +12,9 @@ export default class Connection {
     return new Promise(async (resolve, reject) => {
       try {
         this.db = await createConnection(`${env.mongodb_url}`, {
-          authSource: process.env.NODE_ENV === 'production' ? env.mongodb_authsource : null,
-          ssl: process.env.NODE_ENV === 'production' ? true : false,
-          replicaSet: process.env.NODE_ENV === 'production' ? env.mongodb_replset : null,
+          authSource: env.mongodb_authsource ? env.mongodb_authsource : null,
+          ssl: env.mongodb_replset ? true : false,
+          replicaSet: env.mongodb_replset ? env.mongodb_replset : null,
           dbName: env.mongodb_database_name,
         });
         if (this.db.readyState !== 1) {
