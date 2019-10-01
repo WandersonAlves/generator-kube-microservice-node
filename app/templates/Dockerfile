@@ -1,4 +1,4 @@
-FROM node:10.15-alpine
+FROM astefanutti/scratch-node
 ENV NODE_ENV production
 COPY ./build ./
 # Only necessary to debug container in developer machine
