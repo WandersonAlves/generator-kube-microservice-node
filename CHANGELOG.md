@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.10](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.9...v2.3.10) (2019-10-01)
+
+
+### Bug Fixes
+
+* timeout errors as TypeError ([27dcd39](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/27dcd39))
+* use connection attrs if they exist instead of env ([1b6d474](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/1b6d474))
+* **docs:** add missing info on docs ([0a08faf](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/0a08faf))
+* **node:** add missing redis_url on env ([23f52ac](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/23f52ac))
+
+
+### Performance Improvements
+
+* **docker:** change docker base image ([23d9513](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/23d9513))
+
+
+
 ## [2.3.9](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.8...v2.3.9) (2019-09-13)
 
 
