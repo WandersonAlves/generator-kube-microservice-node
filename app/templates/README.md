@@ -164,6 +164,8 @@ export default injectionContainer;
 
 ```
 
+Your entities controllers should be imported on `src/config/inversify.config.ts`, so `inversify-express-utils` can inject your controller on express routes (as seen on first two lines on example above).
+
 If your controller has another class dependency, inject the dependency onto your class like this:
 
 ```typescript

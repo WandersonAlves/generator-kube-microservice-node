@@ -73,7 +73,7 @@ export default class TenantController {
   }
 ```
 
-Everything is injected by `inversify` and the composition root lives in `src/config/inversify.config.ts`.
+Everything is injected by `inversify` and the composition root lives in `src/config/inversify.config.ts`. Your entities controllers should be imported on `src/config/inversify.config.ts`, so `inversify-express-utils` can inject your controller on express routes.
 
 Inside the composition root, we import all controllers and `inversifyjs` takes care to setup our application (as seen on `src/index.ts`)
 
