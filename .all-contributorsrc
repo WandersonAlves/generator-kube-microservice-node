@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "diegofreemind",
+      "name": "Vitor Die.go",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/15676011?v=4",
+      "profile": "https://www.linkedin.com/in/vitor-diego/",
+      "contributions": [
+        "bug",
+        "ideas"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "generator-kube-microservice-node",
+  "projectOwner": "e3Labs",
+  "repoType": "github",
+  "repoHost": "https://github.com"
+}

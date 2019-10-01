@@ -1,4 +1,5 @@
 # generator-kube-microservice-node
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
 
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 
@@ -198,3 +199,18 @@ Many thanks for the folks that worked hard on:
 - `swagger-express-ts` (https://github.com/olivierlsc/swagger-express-ts)
 
 Without these libs, this boilerplate doesn't exists
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+<table>
+  <tr>
+    <td align="center"><a href="https://www.linkedin.com/in/vitor-diego/"><img src="https://avatars1.githubusercontent.com/u/15676011?v=4" width="100px;" alt="Vitor Die.go"/><br /><sub><b>Vitor Die.go</b></sub></a><br /><a href="https://github.com/e3Labs/generator-kube-microservice-node/issues?q=author%3Adiegofreemind" title="Bug reports">🐛</a> <a href="#ideas-diegofreemind" title="Ideas, Planning, & Feedback">🤔</a></td>
+  </tr>
+</table>
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
