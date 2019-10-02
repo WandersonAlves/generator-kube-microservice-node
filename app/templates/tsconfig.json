@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "commonjs",
+    "module": "es6",
     "types": ["reflect-metadata", "swagger-express-ts"],
     "outDir": "dist",
     "moduleResolution": "node",

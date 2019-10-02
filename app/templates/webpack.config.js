@@ -16,8 +16,7 @@ module.exports = {
   },
   plugins: [
     new CopyPlugin([
-      { from: 'node_modules/saslprep/code-points.mem', to: '' },
-      { from: '<FILE_NAME>', to: '' },
+      { from: 'node_modules/saslprep/code-points.mem', to: '' }
     ]),
   ],
 };
