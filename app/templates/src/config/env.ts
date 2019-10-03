@@ -19,5 +19,4 @@ export default {
   app_token: process.env.APPLICATION_TOKEN,
   service_auth: process.env.SERVICE_AUTH,
   rabbitmq_url: process.env.RABBITMQ_URL,
-  redis_url: process.env.REDIS_URL
 };
