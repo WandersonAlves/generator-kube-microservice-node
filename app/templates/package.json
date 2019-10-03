@@ -53,6 +53,7 @@
     "pretty-quick": "^1.10.0",
     "redis": "^2.8.0",
     "reflect-metadata": "^0.1.13",
+    "saslprep": "^1.0.3",
     "swagger-express-ts": "^1.0.1",
     "swagger-ui-dist": "^3.23.1",
     "ts-node": "^8.2.0",
