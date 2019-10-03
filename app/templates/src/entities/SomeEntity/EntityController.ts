@@ -19,6 +19,7 @@ import <%= serviceName %> from './<%= serviceName %>';
 import REFERENCES from '../../config/inversify.references';
 import EntityNotFoundException from '../../shared/exceptions/EntityNotFoundException';
 import withException from '../../shared/decorators/withException';
+import { validateRequest } from '../../shared/utils';
 
 const _createEdit<%= entityName %>Validator: ValidationChain[] = [];
 
@@ -54,7 +55,7 @@ export default class <%= controllerName %> {
   @httpPost('/', ..._createEdit<%= entityName %>Validator)
   @withException
   async post<%= entityName %>(@request() req: Request, @response() res: Response, @requestBody() <%= entityNameLowerCase %>: <%= interfaceName %>) {
-    this.<%= serviceInstanceName %>.validateRequest(req);
+    validateRequest(req);
     const new<%= entityName %> = await this.<%= serviceInstanceName %>.insert(<%= entityNameLowerCase %>);
     res.status(CREATED).send(new<%= entityName %>);
   }
@@ -62,7 +63,7 @@ export default class <%= controllerName %> {
   @httpPut('/', ..._createEdit<%= entityName %>Validator)
   @withException
   async put<%= entityName %>(@request() req: Request, @response() res: Response, @requestBody() <%= entityNameLowerCase %>: <%= interfaceName %>) {
-    this.<%= serviceInstanceName %>.validateRequest(req);
+    validateRequest(req);
     const updated<%= entityName %> = await this.<%= serviceInstanceName %>.update(<%= entityNameLowerCase %>);
     res.status(CREATED).send(updated<%= entityName %>);
   }

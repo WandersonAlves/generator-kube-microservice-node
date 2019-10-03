@@ -2,8 +2,6 @@ import { Document, Model, Schema } from 'mongoose';
 import { IMongoModel, MongoMerger } from '../interfaces/IMongoModel';
 import { injectable, inject, unmanaged } from 'inversify';
 import { Pagination } from '../interfaces/PaginationInterface';
-import { Request } from 'express';
-import { validationResult } from 'express-validator/check';
 import Connection from './Connection';
 import env from '../../config/env';
 import REFERENCES from '../../config/inversify.references';
@@ -168,18 +166,7 @@ export class BaseController<Interface extends IMongoModel> {
     const _model = this._getModel(databaseName);
     return _model.distinct(field as string, filter) as any;
   }
-  /**
-   * Validates a request using `express-validator`
-   * The valiation will be made against the `inversify-express-utils` decorator
-   * If request has errors, it will throw a UnprocessableEntityException error
-   */
-  validateRequest(req: Request): void {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      throw new UnprocessableEntityException(errors.array());
-    }
-    return;
-  }
+  
   /**
    * Gets a model instance from a given database on the current connection
    * @param databaseName database name
