@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.13](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.12...v2.3.13) (2019-10-08)
+
+
+### Bug Fixes
+
+* **node:** missing saslprep dependency ([19ef804](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/19ef804))
+* **node:** remove duplicate redis_url entry ([bdb2ecf](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/bdb2ecf))
+* **node:** rollback compilerOptions.module to commonjs ([59202b6](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/59202b6))
+
+
+
 ## [2.3.12](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.11...v2.3.12) (2019-10-03)
 
 
