@@ -30,7 +30,7 @@ export class BaseController<Interface extends IMongoModel> {
    * @param databaseName Set this to query on another database in the current mongo connection
    */
   insert(entity: Interface, databaseName?: string): Promise<Interface> {
-    const _model = this._getModel(databaseName);
+    const _model = this.getModel(databaseName);
     const model: Document = new _model(entity);
     return model.save() as any;
   }
@@ -50,7 +50,7 @@ export class BaseController<Interface extends IMongoModel> {
       databaseName?: string;
     } = { lean: true },
   ): Promise<Interface> {
-    const _model = this._getModel(extras.databaseName);
+    const _model = this.getModel(extras.databaseName);
     return _model.findById({ _id: id }).lean(extras.lean) as any;
   }
   /**
@@ -77,7 +77,7 @@ export class BaseController<Interface extends IMongoModel> {
       databaseName?: string;
     } = { lean: true },
   ): Promise<Interface[]> {
-    const _model = this._getModel(extras.databaseName);
+    const _model = this.getModel(extras.databaseName);
     return _model
       .find(params.filter, params.fieldsToShow, params.pagination)
       .sort(params.sort)
@@ -104,7 +104,7 @@ export class BaseController<Interface extends IMongoModel> {
       databaseName?: string;
     } = { lean: true },
   ): Promise<Interface> {
-    const _model = this._getModel(extras.databaseName);
+    const _model = this.getModel(extras.databaseName);
     return _model.findOne(params.filter).lean(extras.lean) as any;
   }
   /**
@@ -122,7 +122,7 @@ export class BaseController<Interface extends IMongoModel> {
       databaseName?: string;
     } = { lean: true },
   ): Promise<Interface> {
-    const _model = this._getModel(extras.databaseName);
+    const _model = this.getModel(extras.databaseName);
     return _model.deleteOne({ _id: id }).lean(extras.lean) as any;
   }
   /**
@@ -131,7 +131,7 @@ export class BaseController<Interface extends IMongoModel> {
    * @param databaseName Set this to query on another database in the current mongo connection
    */
   update(params: Interface, databaseName?: string): Promise<Interface> {
-    const _model = this._getModel(databaseName);
+    const _model = this.getModel(databaseName);
     return _model.updateOne({ _id: params._id }, params) as any;
   }
   /**
@@ -140,7 +140,7 @@ export class BaseController<Interface extends IMongoModel> {
    * @param databaseName Set this to query on another database in the current mongo connection
    */
   insertMany(entities: Interface[], databaseName?: string): Promise<Interface[]> {
-    const _model = this._getModel(databaseName);
+    const _model = this.getModel(databaseName);
     return _model.insertMany(entities) as any;
   }
   /**
@@ -149,7 +149,7 @@ export class BaseController<Interface extends IMongoModel> {
    * @param databaseName Set this to query on another database in the current mongo connection
    */
   count(filter: Partial<MongoMerger<Interface>>, databaseName?: string): Promise<number> {
-    const _model = this._getModel(databaseName);
+    const _model = this.getModel(databaseName);
     return _model.count(filter) as any;
   }
   /**
@@ -163,15 +163,15 @@ export class BaseController<Interface extends IMongoModel> {
     filter: Partial<MongoMerger<Interface>> = {},
     databaseName?: string,
   ): Promise<any> {
-    const _model = this._getModel(databaseName);
+    const _model = this.getModel(databaseName);
     return _model.distinct(field as string, filter) as any;
   }
-  
+
   /**
    * Gets a model instance from a given database on the current connection
    * @param databaseName database name
    */
-  private _getModel(databaseName: string = this._defaultDB): Model<Document> {
+  getModel(databaseName: string = this._defaultDB): Model<Document> {
     let _model = this._model;
     if (databaseName) {
       const conn = this._connection.useDB(databaseName);
