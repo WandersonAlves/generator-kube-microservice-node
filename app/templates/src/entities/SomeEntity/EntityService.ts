@@ -1,14 +1,11 @@
-import { Model, Document } from 'mongoose';
 import { <%= interfaceName %> } from './<%= interfaceName %>';
 import { BaseController } from '../../shared/class/BaseController';
-import { injectable, inject } from 'inversify';
-import { <%= entityNameLowerCase %>Schema } from './<%= modelName %>';
-
-import REFERENCES from '../../config/inversify.references';
+import { injectable } from 'inversify';
+import { <%= entityName %>Schema, <%= entityName %>Model } from './<%= modelName %>';
 
 @injectable()
 export default class <%= serviceName %> extends BaseController <<%= interfaceName %>> {
-  constructor(@inject(REFERENCES.<%= modelName %>) model: Model<Document>) {
-    super(model, <%= entityNameLowerCase %>Schema);
+  constructor() {
+    super(<%= entityName %>Model, <%= entityName %>Schema);
   }
 }
