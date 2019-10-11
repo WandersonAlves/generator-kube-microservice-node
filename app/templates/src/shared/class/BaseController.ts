@@ -76,10 +76,11 @@ export class BaseController<Interface extends IMongoModel> {
   findOne(params: {
     filter?: Partial<MongoMerger<Interface>>;
     fieldsToShow?: InterfaceBoolean<Interface>;
+    sort?: InterfacePagination<Interface>;
     databaseName?: string;
   }): Promise<Interface> {
     const _model = this.getModel(params.databaseName);
-    return _model.findOne(params.filter).lean(true) as any;
+    return _model.findOne(params.filter).sort(params.sort).lean(true) as any;
   }
   /**
    * Deletes a Mongoose Document
