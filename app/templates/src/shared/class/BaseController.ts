@@ -36,16 +36,11 @@ export class BaseController<Interface extends IMongoModel> {
   /**
    * Finds a Document by ObjectId
    * @param id A ObjectId from Mongoose schema
-   * @param extras.databaseName Set this to query on another database in the current mongo connection
+   * @param databaseName Set this to query on another database in the current mongo connection
    * @returns A Promise with a single Document
    */
-  findById(
-    id: string,
-    extras?: {
-      databaseName?: string;
-    },
-  ): Promise<Interface> {
-    const _model = this.getModel(extras.databaseName);
+  findById(id: string, databaseName?: string): Promise<Interface> {
+    const _model = this.getModel(databaseName);
     return _model.findById({ _id: id }).lean(true) as any;
   }
   /**
@@ -54,21 +49,17 @@ export class BaseController<Interface extends IMongoModel> {
    * @param params.filter Object used to filter Documents
    * @param params.pagination Object with skip, limit properties to control pagination
    * @param params.fieldsToShow Object containing the fields to return from the Documents
-   * @param extras.databaseName Set this to query on another database in the current mongo connection
+   * @param params.databaseName Set this to query on another database in the current mongo connection
    * @returns A Promise with a Array of Documents found
    */
-  find(
-    params: {
-      filter?: Partial<MongoMerger<Interface>>;
-      pagination?: Pagination;
-      sort?: InterfacePagination<Interface>;
-      fieldsToShow?: InterfaceBoolean<Interface>;
-    },
-    extras?: {
-      databaseName?: string;
-    },
-  ): Promise<Interface[]> {
-    const _model = this.getModel(extras.databaseName);
+  find(params: {
+    filter?: Partial<MongoMerger<Interface>>;
+    pagination?: Pagination;
+    sort?: InterfacePagination<Interface>;
+    fieldsToShow?: InterfaceBoolean<Interface>;
+    databaseName?: string;
+  }): Promise<Interface[]> {
+    const _model = this.getModel(params.databaseName);
     return _model
       .find(params.filter, params.fieldsToShow, params.pagination)
       .sort(params.sort)
@@ -79,33 +70,24 @@ export class BaseController<Interface extends IMongoModel> {
    * @param params Allowed Params: filter, pagination, sort, fieldsToShow
    * @param params.filter Object used to filter Documents
    * @param params.fieldsToShow Object containing the fields to return from the Documents
-   * @param extras.databaseName Set this to query on another database in the current mongo connection
+   * @param params.databaseName Set this to query on another database in the current mongo connection
    * @returns A Promise with a single Document
    */
-  findOne(
-    params: {
-      filter?: Partial<MongoMerger<Interface>>;
-      fieldsToShow?: InterfaceBoolean<Interface>;
-    },
-    extras?: {
-      databaseName?: string;
-    },
-  ): Promise<Interface> {
-    const _model = this.getModel(extras.databaseName);
+  findOne(params: {
+    filter?: Partial<MongoMerger<Interface>>;
+    fieldsToShow?: InterfaceBoolean<Interface>;
+    databaseName?: string;
+  }): Promise<Interface> {
+    const _model = this.getModel(params.databaseName);
     return _model.findOne(params.filter).lean(true) as any;
   }
   /**
    * Deletes a Mongoose Document
    * @param id A ObjectId from Mongoose schema
-   * @param extras.databaseName Set this to query on another database in the current mongo connection
+   * @param databaseName Set this to query on another database in the current mongo connection
    */
-  delete(
-    id: string,
-    extras?: {
-      databaseName?: string;
-    },
-  ): Promise<Interface> {
-    const _model = this.getModel(extras.databaseName);
+  delete(id: string, databaseName?: string): Promise<Interface> {
+    const _model = this.getModel(databaseName);
     return _model.deleteOne({ _id: id }).lean(true) as any;
   }
   /**
