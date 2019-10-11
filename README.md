@@ -1,5 +1,5 @@
 # generator-kube-microservice-node
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
 
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 
@@ -208,6 +208,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="https://www.linkedin.com/in/vitor-diego/"><img src="https://avatars1.githubusercontent.com/u/15676011?v=4" width="100px;" alt="Vitor Die.go"/><br /><sub><b>Vitor Die.go</b></sub></a><br /><a href="https://github.com/e3Labs/generator-kube-microservice-node/issues?q=author%3Adiegofreemind" title="Bug reports">🐛</a> <a href="#ideas-diegofreemind" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="https://github.com/Blira"><img src="https://avatars2.githubusercontent.com/u/43551066?v=4" width="100px;" alt="Bruno Lira"/><br /><sub><b>Bruno Lira</b></sub></a><br /><a href="https://github.com/e3Labs/generator-kube-microservice-node/commits?author=Blira" title="Code">💻</a> <a href="#maintenance-Blira" title="Maintenance">🚧</a></td>
   </tr>
 </table>
 
