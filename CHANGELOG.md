@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.14](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.13...v2.3.14) (2019-10-14)
+
+
+### Bug Fixes
+
+* add sort to findOne ([e97e4ca](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/e97e4ca))
+* make lean true as default ([37e43c6](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/37e43c6))
+
+
+### Features
+
+* getModel now is public ([bb74eee](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/bb74eee))
+
+
+
 ## [2.3.13](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.12...v2.3.13) (2019-10-08)
 
 
