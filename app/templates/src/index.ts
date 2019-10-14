@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import * as mongoose from 'mongoose';
 import * as sourceMapSupport from 'source-map-support';
 
 import { InversifyExpressServer } from 'inversify-express-utils';
@@ -8,6 +9,10 @@ import middleware from './shared/middlewares';
 import injectionContainer from './config/inversify.config';
 import Connection from './shared/class/Connection';
 import REFERENCES from './config/inversify.references';
+
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useCreateIndex', true);
+mongoose.set('useUnifiedTopology', true);
 
 sourceMapSupport.install();
 process.on('unhandledRejection', console.log);
