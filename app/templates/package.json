@@ -6,7 +6,7 @@
   "scripts": {
     "test": "NODE_ENV=test mocha -r ts-node/register src/**/*.spec.ts",
     "clean": "rm -rf dist/",
-    "build": "npm run clean && tsc",
+    "build": "yarn clean && tsc",
     "build:docs": "typedoc --out docs ./src --ignoreCompilerErrors --mode modules",
     "build:docker": "docker build . -t <%= projectName %>",
     "build:webpack": "webpack --config webpack.config.js",
