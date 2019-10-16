@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.16](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.15...v2.3.16) (2019-10-16)
+
+
+### Bug Fixes
+
+* **node:** createdAt, updatedAt as Date ([670ae1c](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/670ae1c))
+* **node:** deprecation warning from express-validator ([09dd5f2](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/09dd5f2))
+* **node:** return native promises on baseController ([af62341](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/af62341))
+
+
+
 ## [2.3.15](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.14...v2.3.15) (2019-10-14)
 
 
