@@ -1,7 +1,7 @@
 import { <%= interfaceName %> } from './<%= interfaceName %>';
 import { OK, NO_CONTENT, CREATED } from 'http-status-codes';
 import { Response, Request } from 'express';
-import { ValidationChain } from 'express-validator/check';
+import { ValidationChain } from 'express-validator';
 import { inject } from 'inversify';
 import {
   controller,
