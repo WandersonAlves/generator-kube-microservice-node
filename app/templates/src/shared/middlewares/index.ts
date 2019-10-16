@@ -12,7 +12,7 @@ import unauthorized from './Unauthorized';
 import notFound from './404';
 
 export default {
-  initMiddlewares(server) {
+  initMiddlewares(server: express.Application) {
     server.use(compression());
     server.use(bodyParser.json());
     server.use(cors());
@@ -21,17 +21,14 @@ export default {
     }
     // server.use(unauthorized);
   },
-  initExceptionMiddlewares(server) {
+  initExceptionMiddlewares(server: express.Application) {
     server.use(notFound);
     server.use(exception);
   },
-  initCustomRoutes(server) {
+  initCustomRoutes(server: express.Application) {
     server.use('/<%= entityNameLowerCase %>/api-docs/swagger', express.static('swagger'));
     server.use('/<%= entityNameLowerCase %>/docs', express.static('docs'));
-    server.use(
-      '/api-docs/swagger/assets',
-      express.static('node_modules/swagger-ui-dist'),
-    );
+    server.use('/api-docs/swagger/assets', express.static('node_modules/swagger-ui-dist'));
     server.use(
       swagger.express({
         definition: {
