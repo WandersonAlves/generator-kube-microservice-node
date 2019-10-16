@@ -2,8 +2,8 @@ export interface IMongoModel {
   _id?: string;
   __v?: any;
   _doc?: any;
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 export type MongoOperations<T> = T | MongoOperationsInternal<T>;
 
