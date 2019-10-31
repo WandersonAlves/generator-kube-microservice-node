@@ -16,6 +16,7 @@ export default class Connection {
           ssl: env.mongodb_replset ? true : false,
           replicaSet: env.mongodb_replset ? env.mongodb_replset : null,
           dbName: env.mongodb_database_name,
+          appname: <%= projectName %>
         });
         if (this.db.readyState !== 1) {
           throw new MongoNotConnectedException();
@@ -38,7 +39,8 @@ export default class Connection {
   }
 
   useDB(databaseName: string) {
-    return this.db.useDb(databaseName);
+    // @ts-ignore
+    return this.db.useDb(databaseName, { useCache: true });
   }
 
   disconnect(): Promise<any> {
