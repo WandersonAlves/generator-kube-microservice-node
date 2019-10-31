@@ -33,6 +33,10 @@ export default class Connection {
     return this.db;
   }
 
+  startSession() {
+    return this.db.startSession();
+  }
+
   useDB(databaseName: string) {
     return this.db.useDb(databaseName);
   }
