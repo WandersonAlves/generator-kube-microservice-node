@@ -36,7 +36,7 @@ bootstrapedServer.listen(env.server_port, async () => {
   console.log(`Opening the gates in ${env.server_port}`);
 });
 
-process.on('SIGINT', () => {
-  mongoConn.disconnect();
+process.on('SIGINT', async () => {
+  await mongoConn.disconnect();
   process.exit(1);
 });
