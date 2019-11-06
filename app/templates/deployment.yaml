@@ -22,7 +22,7 @@ spec:
               name: env-config
         readinessProbe:
           initialDelaySeconds: 5
-          periodSeconds: 3
+          periodSeconds: 5
           successThreshold: 1
           failureThreshold: 1
           timeoutSeconds: 1
@@ -31,7 +31,7 @@ spec:
             path: /health
         livenessProbe:
           initialDelaySeconds: 20
-          periodSeconds: 5
+          periodSeconds: 60
           httpGet:
             path: /health
             port: 3000

@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { OK } from 'http-status-codes';
+import { INTERNAL_SERVER_ERROR, NO_CONTENT } from 'http-status-codes';
 import { inject } from 'inversify';
 import { controller, httpGet, response } from 'inversify-express-utils';
 
@@ -14,10 +14,12 @@ export default class HealthCheckController {
   @httpGet('/')
   @withException
   async hearthBeat(@response() res: Response) {
-    await this._connection
-      .getConnection()
-      .db.admin()
-      .ping();
-    res.status(OK).send();
+    const ready = this._connection.getConnection().readyState;
+    if (ready === 1) {
+      res.status(NO_CONTENT).send();
+    }
+    else {
+      res.status(INTERNAL_SERVER_ERROR).send();
+    }
   }
 }
