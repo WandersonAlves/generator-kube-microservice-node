@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.17](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.16...v2.3.17) (2019-11-06)
+
+
+### Features
+
+* **node:** add deleteMany method ([8ab7c5b](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/8ab7c5b))
+* **node:** add support for mongoose sessions ([a44819d](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/a44819d))
+* **node:** update redis controller ([c263a86](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/c263a86))
+
+
+
 ## [2.3.16](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.15...v2.3.16) (2019-10-16)
 
 
