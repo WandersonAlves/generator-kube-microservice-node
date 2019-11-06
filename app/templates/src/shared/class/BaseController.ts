@@ -93,6 +93,15 @@ export class BaseController<Interface extends IMongoModel> {
     return _model.deleteOne({ _id: id }).lean(true) as any;
   }
   /**
+   * Delete many documents
+   * @param params.fieldsToShow Object containing the fields to return from the Documents
+   * @param params.databaseName Set this to query on another database in the current mongo connection
+   */
+  deleteMany(params: { filter?: Partial<MongoMerger<Interface>>; databaseName?: string }) {
+    const _model = this.getModel(params.databaseName);
+    return _model.deleteMany(params.filter).exec();
+  }
+  /**
    * Updates a Document
    * @param entity A object that matchs a mongoose schema with a currently know ObjectId
    * @param databaseName Set this to query on another database in the current mongo connection
