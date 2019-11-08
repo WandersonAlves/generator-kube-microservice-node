@@ -3,10 +3,6 @@ import MongoNotConnectedException from '../shared/exceptions/MongoNotConnectedEx
 
 dotenv.config();
 
-if (!process.env.MONGO_DB || !process.env.MONGO_URL) {
-  throw new MongoNotConnectedException();
-}
-
 export default {
   server_port: process.env.PORT,
   mongodb_url: process.env.MONGO_URL,
