@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.18](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.17...v2.3.18) (2019-11-11)
+
+
+### Bug Fixes
+
+* **kubernetes:** update healthCheck ([54a98aa](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/54a98aa))
+* **node:** remove exception when process.env.MONGO_DB is not set ([fbe4586](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/fbe4586))
+* $minDistance not required ([f14789e](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/f14789e))
+* wrong appname construct ([2fa8a06](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/2fa8a06))
+
+
+
 ## [2.3.17](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.16...v2.3.17) (2019-11-06)
 
 
