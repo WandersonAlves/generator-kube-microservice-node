@@ -193,7 +193,7 @@ interface MongoGeospatialOperators {
       coordinates: geoJSONPoint;
     };
     $maxDistance: number;
-    $minDistance: number;
+    $minDistance?: number;
   };
   /**
    * Selects documents with geospatial data that exists entirely within a specified shape.
