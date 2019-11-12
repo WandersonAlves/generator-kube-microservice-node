@@ -15,15 +15,16 @@ export default class RedisController {
   /**
    * Get a value from a key in redis using GET command
    * @param key Key
+   * @param defaultValue Return this if no value for given key are found
    */
-  get<T>(key: string): Promise<T> {
+  get<T>(key: string, defaultValue?: T): Promise<T> {
     return new Promise(async (resolve, reject) => {
       try {
         const result = await this.getAsync(key);
         if (result) {
           resolve(JSON.parse(result));
         } else {
-          resolve(null);
+          resolve(defaultValue);
         }
       } catch (err) {
         reject(err);
