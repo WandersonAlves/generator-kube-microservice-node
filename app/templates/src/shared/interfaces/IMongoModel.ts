@@ -227,7 +227,7 @@ interface MongoGeospatialOperators {
       coordinates: geoJSONPoint;
     };
     $maxDistance: number;
-    $minDistance: number;
+    $minDistance?: number;
   };
 }
 export interface MongoLogicalOperations<T> {
