@@ -29,8 +29,8 @@ export default class RedisController {
    * @param params.expires TTL value for given key
    * @param callback Function that returns something and save it on redis in case cache is empty
    */
-  async withRedis<T>(params: { key: string; expires?: number }, callback: () => Promise<T>) {
-    const cache = await this.get(params.key);
+  async withRedis<T>(params: { key: string; expires?: number }, callback: () => Promise<T>): Promise<T> {
+    const cache = await this.get<T>(params.key);
     if (!cache) {
       const result = await callback();
       if (params.expires) {
