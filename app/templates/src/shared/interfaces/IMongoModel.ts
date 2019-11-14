@@ -5,13 +5,18 @@ export interface IMongoModel {
   createdAt?: Date;
   updatedAt?: Date;
 }
-export type MongoOperations<T> = T | MongoOperationsInternal<T>;
+type MongoOperations<T> = T | MongoOperationsInternal<T>;
 
 /**
  * MongoMerger is all attrs from model + all logicalOperators on toplevel
  * If you use attr as a object, all other expressions from mongo appear as $lt, $gte etc
  */
-export type MongoMerger<T> = { [P in keyof T]?: MongoOperations<T[P]> };
+type MongoMerger<T> = { [P in keyof T]?: MongoOperations<T[P]> };
+
+/**
+ * MongoTypes is all attrs from model and all logical operations on top level
+ */
+export type MongoTypes<T> = Partial<MongoMerger<T> | MongoLogicalOperations<T>>;
 
 export enum MongoBSONTypes {
   DOUBLE = 1,
@@ -193,7 +198,7 @@ interface MongoGeospatialOperators {
       coordinates: geoJSONPoint;
     };
     $maxDistance: number;
-    $minDistance?: number;
+    $minDistance: number;
   };
   /**
    * Selects documents with geospatial data that exists entirely within a specified shape.
@@ -225,27 +230,26 @@ interface MongoGeospatialOperators {
     $minDistance: number;
   };
 }
-interface MongoLogicalOperations<T> {
+export interface MongoLogicalOperations<T> {
   /**
    * Joins query clauses with a logical AND returns all documents that match the conditions of both clauses.
    */
-  $and?: MongoComparisonOperators<T>;
+  $and?: Array<MongoMerger<T>>;
   /**
    * Inverts the effect of a query expression and returns documents that do not match the query expression
    */
-  $not?: MongoComparisonOperators<T>;
+  $not?: Array<MongoMerger<T>>;
   /**
    * Joins query clauses with a logical NOR returns all documents that fail to match both clauses.
    */
-  $nor?: MongoComparisonOperators<T>;
+  $nor?: Array<MongoMerger<T>>;
   /**
    * Joins query clauses with a logical OR returns all documents that match the conditions of either clause.
    */
-  $or?: MongoComparisonOperators<T>;
+  $or?: Array<MongoMerger<T>>;
 }
 interface MongoOperationsInternal<T>
   extends MongoComparisonOperators<T>,
-    MongoLogicalOperations<T>,
     MongoGeospatialOperators,
     MongoArrayOperators<T>,
     MongoElementOperators,

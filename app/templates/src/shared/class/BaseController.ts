@@ -1,5 +1,5 @@
 import { Document, Model, Schema, ClientSession } from 'mongoose';
-import { IMongoModel, MongoMerger } from '../interfaces/IMongoModel';
+import { IMongoModel, MongoTypes } from '../interfaces/IMongoModel';
 import { injectable, inject, unmanaged } from 'inversify';
 import { Pagination } from '../interfaces/PaginationInterface';
 import Connection from './Connection';
@@ -55,7 +55,7 @@ export class BaseController<Interface extends IMongoModel> {
    * @returns A Promise with a Array of Documents found
    */
   find(params: {
-    filter?: Partial<MongoMerger<Interface>>;
+    filter?: MongoTypes<Interface>;
     pagination?: Pagination;
     sort?: InterfacePagination<Interface>;
     fieldsToShow?: InterfaceBoolean<Interface>;
@@ -76,7 +76,7 @@ export class BaseController<Interface extends IMongoModel> {
    * @returns A Promise with a single Document
    */
   findOne(params: {
-    filter?: Partial<MongoMerger<Interface>>;
+    filter?: MongoTypes<Interface>;
     fieldsToShow?: InterfaceBoolean<Interface>;
     databaseName?: string;
   }): Promise<Interface> {
@@ -97,7 +97,7 @@ export class BaseController<Interface extends IMongoModel> {
    * @param params.fieldsToShow Object containing the fields to return from the Documents
    * @param params.databaseName Set this to query on another database in the current mongo connection
    */
-  deleteMany(params: { filter?: Partial<MongoMerger<Interface>>; databaseName?: string }) {
+  deleteMany(params: { filter?: MongoTypes<Interface>; databaseName?: string }) {
     const _model = this.getModel(params.databaseName);
     return _model.deleteMany(params.filter).exec();
   }
@@ -126,7 +126,7 @@ export class BaseController<Interface extends IMongoModel> {
    * @param filter Object used to filter Documents
    * @param databaseName Set this to query on another database in the current mongo connection
    */
-  count(filter: Partial<MongoMerger<Interface>>, databaseName?: string): Promise<number> {
+  count(filter: MongoTypes<Interface>, databaseName?: string): Promise<number> {
     const _model = this.getModel(databaseName);
     return _model.count(filter) as any;
   }
@@ -138,7 +138,7 @@ export class BaseController<Interface extends IMongoModel> {
    */
   distinct(
     field: InterfacePropertiesToString<Interface>,
-    filter: Partial<MongoMerger<Interface>> = {},
+    filter: MongoTypes<Interface> = {},
     databaseName?: string,
   ): Promise<any> {
     const _model = this.getModel(databaseName);
