@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.19](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.18...v2.3.19) (2019-11-14)
+
+
+### Bug Fixes
+
+* **node:** $minDistance is optional ([22fa81d](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/22fa81d))
+* **node:** add return type to withRedis ([e821166](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/e821166))
+* **node:** mongo logical operators on toplevel ([475f5b9](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/475f5b9)), closes [#11](https://github.com/WandersonAlves/generator-kube-microservice-node/issues/11)
+
+
+### Features
+
+* add defaultValue to redis.get ([157d987](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/157d987))
+* **redis:** add withRedis helper function ([31c9916](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/31c9916))
+
+
+
 ## [2.3.18](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.17...v2.3.18) (2019-11-11)
 
 
