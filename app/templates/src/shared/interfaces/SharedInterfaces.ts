@@ -1,3 +1,15 @@
+import GenericException from '../exceptions/GenericException';
+
+type Left = GenericException;
+type Right<T> = T;
+export type Either<T> = [Left, Right<T>];
+
+export interface Pagination {
+  limit: number;
+  skip: number;
+  sort?: any;
+}
+
 export interface IMongoModel {
   _id?: string;
   __v?: any;
@@ -5,6 +17,14 @@ export interface IMongoModel {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export type DeleteOp = {
+  ok?: number;
+  n?: number;
+} & {
+  deletedCount?: number;
+};
+
 type MongoOperations<T> = T | MongoOperationsInternal<T>;
 
 /**

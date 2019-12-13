@@ -1,9 +1,10 @@
 import { Document, Model, Schema, ClientSession } from 'mongoose';
-import { IMongoModel, MongoTypes } from '../interfaces/IMongoModel';
+import { IMongoModel, MongoTypes, Pagination, Either, DeleteOp } from '../interfaces/SharedInterfaces';
 import { injectable, inject, unmanaged } from 'inversify';
-import { Pagination } from '../interfaces/PaginationInterface';
 import Connection from './Connection';
+import EntityNotFoundException from '../exceptions/EntityNotFoundException';
 import env from '../../config/env';
+import GenericException from '../exceptions/GenericException';
 import REFERENCES from '../../config/inversify.references';
 
 type InterfaceBoolean<T> = { [P in keyof T]?: boolean };
@@ -29,10 +30,17 @@ export class BaseController<Interface extends IMongoModel> {
    * @param databaseName Set this to query on another database in the current mongo connection
    * @param session A mongoose session to handle transactions
    */
-  insert(entity: Interface, databaseName?: string, session?: ClientSession): Promise<Interface> {
-    const _model = this.getModel(databaseName);
-    const model: Document = new _model(entity);
-    return model.save({ session }) as any;
+  insert(entity: Interface, databaseName?: string, session?: ClientSession): Promise<Either<Interface>> {
+    return new Promise(async resolve => {
+      try {
+        const _model = this.getModel(databaseName);
+        const model: Document = new _model(entity);
+        const result = (await model.save({ session })) as any;
+        resolve([null, result]);
+      } catch (e) {
+        resolve([new GenericException({ name: e.name, message: e.message }), null]);
+      }
+    });
   }
   /**
    * Finds a Document by ObjectId
@@ -41,9 +49,19 @@ export class BaseController<Interface extends IMongoModel> {
    * @param databaseName Set this to query on another database in the current mongo connection
    * @returns A Promise with a single Document
    */
-  findById(id: string, fieldsToShow?: InterfaceBoolean<Interface>, databaseName?: string): Promise<Interface> {
-    const _model = this.getModel(databaseName);
-    return _model.findById({ _id: id }, fieldsToShow).lean(true) as any;
+  findById(id: string, fieldsToShow?: InterfaceBoolean<Interface>, databaseName?: string): Promise<Either<Interface>> {
+    return new Promise(async resolve => {
+      try {
+        const _model = this.getModel(databaseName);
+        const result = (await _model.findById({ _id: id }, fieldsToShow).lean(true)) as any;
+        if (!result) {
+          return resolve([new EntityNotFoundException({ id }), null]);
+        }
+        resolve([null, result]);
+      } catch (e) {
+        resolve([new GenericException({ name: e.name, message: e.message }), null]);
+      }
+    });
   }
   /**
    * Finds multiple Documents
@@ -60,12 +78,19 @@ export class BaseController<Interface extends IMongoModel> {
     sort?: InterfacePagination<Interface>;
     fieldsToShow?: InterfaceBoolean<Interface>;
     databaseName?: string;
-  }): Promise<Interface[]> {
-    const _model = this.getModel(params.databaseName);
-    return _model
-      .find(params.filter, params.fieldsToShow, params.pagination)
-      .sort(params.sort)
-      .lean(true) as any;
+  }): Promise<Either<Interface[]>> {
+    return new Promise(async resolve => {
+      try {
+        const _model = this.getModel(params.databaseName);
+        const result: Interface[] = await _model
+          .find(params.filter, params.fieldsToShow, params.pagination)
+          .sort(params.sort)
+          .lean(true);
+        resolve([null, result]);
+      } catch (e) {
+        resolve([new GenericException({ name: e.name, message: e.message }), null]);
+      }
+    });
   }
   /**
    * Finds the first Document that matchs the params
@@ -79,27 +104,48 @@ export class BaseController<Interface extends IMongoModel> {
     filter?: MongoTypes<Interface>;
     fieldsToShow?: InterfaceBoolean<Interface>;
     databaseName?: string;
-  }): Promise<Interface> {
-    const _model = this.getModel(params.databaseName);
-    return _model.findOne(params.filter, params.fieldsToShow).lean(true) as any;
+  }): Promise<Either<Interface[]>> {
+    return new Promise(async resolve => {
+      try {
+        const _model = this.getModel(params.databaseName);
+        const result = (await _model.findOne(params.filter, params.fieldsToShow).lean(true)) as any;
+        resolve([null, result]);
+      } catch (e) {
+        resolve([new GenericException({ name: e.name, message: e.message }), null]);
+      }
+    });
   }
   /**
    * Deletes a Mongoose Document
    * @param id A ObjectId from Mongoose schema
    * @param extras.databaseName Set this to query on another database in the current mongo connection
    */
-  delete(id: string, databaseName?: string): Promise<Interface> {
-    const _model = this.getModel(databaseName);
-    return _model.deleteOne({ _id: id }).lean(true) as any;
-  }
+  delete = (id: string, databaseName?: string): Promise<Either<Interface[]>> => {
+    return new Promise(async resolve => {
+      try {
+        const _model = this.getModel(databaseName);
+        const result = (await _model.deleteOne({ _id: id }).lean(true)) as any;
+        resolve([null, result]);
+      } catch (e) {
+        resolve([new GenericException({ name: e.name, message: e.message }), null]);
+      }
+    });
+  };
   /**
    * Delete many documents
    * @param params.fieldsToShow Object containing the fields to return from the Documents
    * @param params.databaseName Set this to query on another database in the current mongo connection
    */
-  deleteMany(params: { filter?: MongoTypes<Interface>; databaseName?: string }) {
-    const _model = this.getModel(params.databaseName);
-    return _model.deleteMany(params.filter).exec();
+  deleteMany(params: { filter?: MongoTypes<Interface>; databaseName?: string }): Promise<Either<DeleteOp>> {
+    return new Promise(async resolve => {
+      try {
+        const _model = this.getModel(params.databaseName);
+        const result = await _model.deleteMany(params.filter).exec();
+        resolve([null, result]);
+      } catch (e) {
+        resolve([new GenericException({ name: e.name, message: e.message }), null]);
+      }
+    });
   }
   /**
    * Updates a Document
@@ -107,9 +153,16 @@ export class BaseController<Interface extends IMongoModel> {
    * @param databaseName Set this to query on another database in the current mongo connection
    * @param session A mongoose session to handle transactions
    */
-  update(entity: Interface, databaseName?: string, session?: ClientSession): Promise<Interface> {
-    const _model = this.getModel(databaseName);
-    return _model.updateOne({ _id: entity._id }, entity, { session }) as any;
+  update(entity: Interface, databaseName?: string, session?: ClientSession): Promise<Either<Interface>> {
+    return new Promise(async resolve => {
+      try {
+        const _model = this.getModel(databaseName);
+        const result = await _model.updateOne({ _id: entity._id }, entity, { session }).exec();
+        resolve([null, result]);
+      } catch (e) {
+        resolve([new GenericException({ name: e.name, message: e.message }), null]);
+      }
+    });
   }
   /**
    * Save multiple documents
@@ -117,18 +170,32 @@ export class BaseController<Interface extends IMongoModel> {
    * @param databaseName Set this to query on another database in the current mongo connection
    * @param session A mongoose session to handle transactions
    */
-  insertMany(entities: Interface[], databaseName?: string, session?: ClientSession): Promise<Interface[]> {
-    const _model = this.getModel(databaseName);
-    return _model.insertMany(entities, { session }) as any;
+  insertMany(entities: Interface[], databaseName?: string, session?: ClientSession): Promise<Either<Interface[]>> {
+    return new Promise(async resolve => {
+      try {
+        const _model = this.getModel(databaseName);
+        const result = (await _model.insertMany(entities, { session })) as any;
+        resolve([null, result]);
+      } catch (e) {
+        resolve([new GenericException({ name: e.name, message: e.message }), null]);
+      }
+    });
   }
   /**
    * Get the count of documents by a given filter
    * @param filter Object used to filter Documents
    * @param databaseName Set this to query on another database in the current mongo connection
    */
-  count(filter: MongoTypes<Interface>, databaseName?: string): Promise<number> {
-    const _model = this.getModel(databaseName);
-    return _model.count(filter) as any;
+  count(filter: MongoTypes<Interface>, databaseName?: string): Promise<Either<number>> {
+    return new Promise(async resolve => {
+      try {
+        const _model = this.getModel(databaseName);
+        const result = await _model.count(filter).exec();
+        resolve([null, result]);
+      } catch (e) {
+        resolve([new GenericException({ name: e.name, message: e.message }), null]);
+      }
+    });
   }
   /**
    * Return a distinct operation
@@ -140,9 +207,16 @@ export class BaseController<Interface extends IMongoModel> {
     field: InterfacePropertiesToString<Interface>,
     filter: MongoTypes<Interface> = {},
     databaseName?: string,
-  ): Promise<any> {
-    const _model = this.getModel(databaseName);
-    return _model.distinct(field as string, filter) as any;
+  ): Promise<Either<any[]>> {
+    return new Promise(async resolve => {
+      try {
+        const _model = this.getModel(databaseName);
+        const result = await _model.distinct(field as string, filter).exec();
+        resolve([null, result]);
+      } catch (e) {
+        resolve([new GenericException({ name: e.name, message: e.message }), null]);
+      }
+    });
   }
 
   /**
