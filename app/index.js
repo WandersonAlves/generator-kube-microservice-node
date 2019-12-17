@@ -12,6 +12,7 @@ module.exports = class extends Generator {
   }
 
   start() {
+    this.usage('Welcome to Kube Generator');
     this.prompt([
       {
         type: 'input',
@@ -65,16 +66,14 @@ module.exports = class extends Generator {
         this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}`)
       );
       this.fs.move(
+        this.destinationPath("./src/controllers/EntityController.ts"),
+        this.destinationPath(
+          `./src/controllers/${this._capitalize(answers.entityName)}Controller.ts`
+        )
+      );
+      this.fs.move(
         this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}/EntityService.ts`),
         this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}/${this._capitalize(answers.entityName)}Service.ts`)
-      );
-      this.fs.move(
-        this.destinationPath(`./src/swaggerModels/EntitySwaggerModel.ts`),
-        this.destinationPath(`./src/swaggerModels/${this._capitalize(answers.entityName)}SwaggerModel.ts`)
-      );
-      this.fs.move(
-        this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}/EntityController.ts`),
-        this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}/${this._capitalize(answers.entityName)}Controller.ts`)
       );
       this.fs.move(
         this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}/EntityModel.ts`),

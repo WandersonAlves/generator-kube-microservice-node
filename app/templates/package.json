@@ -54,8 +54,6 @@
     "redis": "^2.8.0",
     "reflect-metadata": "^0.1.13",
     "saslprep": "^1.0.3",
-    "swagger-express-ts": "^1.0.1",
-    "swagger-ui-dist": "^3.24.0",
     "ts-node": "^8.4.1",
     "tslint": "^5.20.0",
     "typedoc": "^0.15.0",
