@@ -23,6 +23,6 @@ export default async (req: Request, res: Response, next) => {
     });
     next();
   } catch (e) {
-    next(new AuthException());
+    next(new AuthException(AuthException.JWTExpiredOrNotReceived));
   }
 };
