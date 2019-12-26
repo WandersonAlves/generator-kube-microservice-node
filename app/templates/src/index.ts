@@ -13,6 +13,7 @@ import REFERENCES from './config/inversify.references';
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
+mongoose.set('useFindAndModify', true);
 
 sourceMapSupport.install();
 process.on('unhandledRejection', console.log);

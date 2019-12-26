@@ -157,7 +157,7 @@ export class BaseController<Interface extends IMongoModel> {
     return new Promise(async resolve => {
       try {
         const _model = this.getModel(databaseName);
-        const result = await _model.updateOne({ _id: entity._id }, entity, { session }).exec();
+        const result: Interface = (await _model.findByIdAndUpdate(entity._id, entity, { session, new: true }).exec()) as any;
         resolve([null, result]);
       } catch (e) {
         resolve([new GenericException({ name: e.name, message: e.message }), null]);
