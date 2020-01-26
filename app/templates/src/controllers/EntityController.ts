@@ -38,7 +38,7 @@ export default class <%= controllerName %> {
   @httpGet('/:id')
   @withException
   async get<%= entityName %>(@response() res: Response, @requestParam('id') id: string) {
-    const result = await this.<%= serviceInstanceName %>.findById(id);
+    const result = await this.<%= serviceInstanceName %>.findById({ id });
     if (!result) {
       throw new EntityNotFoundException({ id });
     }
@@ -48,7 +48,7 @@ export default class <%= controllerName %> {
   @httpDelete('/:id')
   @withException
   async delete<%= entityName %>(@response() res: Response, @requestParam('id') id: string) {
-    await this.<%= serviceInstanceName %>.delete(id);
+    await this.<%= serviceInstanceName %>.delete({ id, throwErrors: true });
     res.status(NO_CONTENT).send();
   }
 
@@ -56,7 +56,7 @@ export default class <%= controllerName %> {
   @withException
   async post<%= entityName %>(@request() req: Request, @response() res: Response, @requestBody() <%= entityNameLowerCase %>: <%= interfaceName %>) {
     validateRequest(req);
-    const new<%= entityName %> = await this.<%= serviceInstanceName %>.insert(<%= entityNameLowerCase %>);
+    const new<%= entityName %> = await this.<%= serviceInstanceName %>.insert({ entity: <%= entityNameLowerCase %>, throwErrors: true });
     res.status(CREATED).send(new<%= entityName %>);
   }
 
@@ -64,7 +64,7 @@ export default class <%= controllerName %> {
   @withException
   async put<%= entityName %>(@request() req: Request, @response() res: Response, @requestBody() <%= entityNameLowerCase %>: <%= interfaceName %>) {
     validateRequest(req);
-    const updated<%= entityName %> = await this.<%= serviceInstanceName %>.update(<%= entityNameLowerCase %>);
+    const updated<%= entityName %> = await this.<%= serviceInstanceName %>.update({ entity: <%= entityNameLowerCase %>, conditions: { _id: <%= entityNameLowerCase %>._id }, throwErrors: true });
     res.status(CREATED).send(updated<%= entityName %>);
   }
 }

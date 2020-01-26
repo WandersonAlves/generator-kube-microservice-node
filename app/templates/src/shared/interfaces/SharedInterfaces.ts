@@ -12,8 +12,6 @@ export interface Pagination {
 
 export interface IMongoModel {
   _id?: string;
-  __v?: any;
-  _doc?: any;
   createdAt?: Date;
   updatedAt?: Date;
 }
