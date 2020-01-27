@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [2.4.0](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.19...v2.4.0) (2020-01-27)
+
+
+### Bug Fixes
+
+* **node:** update method not returning object ([c27e251](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/c27e251))
+
+
+### Features
+
+* move entity controller to controllers folder ([5d9df85](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/5d9df85))
+* **node:** update BaseController ([26b31f0](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/26b31f0))
+* **node:** update method signature overload ([58b3c2c](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/58b3c2c))
+* **wip:** functional error handling test ([4147806](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/4147806))
+
+
+
 ## [2.3.19](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.18...v2.3.19) (2019-11-14)
 
 
