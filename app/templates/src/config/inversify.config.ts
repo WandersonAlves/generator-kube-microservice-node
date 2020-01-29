@@ -1,5 +1,5 @@
 import '../shared/middlewares/HealthCheck';
-import '../controllers/<%= entityName %>/<%= controllerName %>';
+import '../controllers/<%= controllerName %>';
 
 import { Container } from 'inversify';
 
