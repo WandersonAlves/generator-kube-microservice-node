@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.1](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.4.0...v2.4.1) (2020-01-29)
+
+
+### Bug Fixes
+
+* **node:** throw erro if entity don't exists on update ([62e11c3](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/62e11c3))
+* **node:** wrong controller import path ([1a20c02](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/1a20c02))
+
+
+
 # [2.4.0](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.3.19...v2.4.0) (2020-01-27)
 
 
