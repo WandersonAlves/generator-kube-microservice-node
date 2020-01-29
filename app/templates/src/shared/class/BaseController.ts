@@ -263,8 +263,11 @@ export class BaseController<Interface extends IMongoModel> {
       try {
         const _model = this.getModel(params.databaseName);
         const result: Interface = (await _model
-          .findOneAndUpdate(params.conditions, params.entity, { session: params.session, new: true })
+          .findOneAndUpdate(params.conditions, params.entity, { session: params.session })
           .exec()) as any;
+        if (!result) {
+          throw new EntityNotFoundException(params.conditions);
+        }
         if (params.throwErrors) {
           resolve(result);
         }
