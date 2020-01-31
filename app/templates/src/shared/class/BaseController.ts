@@ -64,6 +64,7 @@ interface IDeleteManyParams<T, BooleanType extends boolean> extends ICommonParam
 interface IUpdateParams<ReturnType, BooleanType extends boolean> extends ICommonParamsSession<BooleanType> {
   entity: Partial<ReturnType>;
   conditions: MongoTypes<ReturnType>;
+  upsert?: boolean;
 }
 
 @injectable()
@@ -89,7 +90,7 @@ export class BaseController<Interface extends IMongoModel> {
   insert(params: IInsertParams<Interface, false>): Promise<Either<Interface>>;
   insert(params: IInsertParams<Interface, true>): Promise<Interface>;
   insert(params: IInsertParams<Interface, boolean>): Promise<Either<Interface> | Interface> {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve, reject) => {
       try {
         const _model = this.getModel(params.databaseName);
         const model: Document = new _model(params.entity);
@@ -101,7 +102,7 @@ export class BaseController<Interface extends IMongoModel> {
       } catch (e) {
         const exception = new GenericException({ name: e.name, message: e.message });
         if (params.throwErrors) {
-          throw exception;
+          reject(exception);
         }
         resolve([exception, null]);
       }
@@ -118,7 +119,7 @@ export class BaseController<Interface extends IMongoModel> {
   findById(params: IFindByIdParams<Interface, false>): Promise<Either<Interface>>;
   findById(params: IFindByIdParams<Interface, true>): Promise<Interface>;
   findById(params: IFindByIdParams<Interface, boolean>): Promise<Either<Interface> | Interface> {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve, reject) => {
       try {
         const _model = this.getModel(params.databaseName);
         const result = (await _model.findById({ _id: params.id }, params.fieldsToShow).lean(true)) as any;
@@ -129,7 +130,7 @@ export class BaseController<Interface extends IMongoModel> {
       } catch (e) {
         const exception = new GenericException({ name: e.name, message: e.message });
         if (params.throwErrors) {
-          throw exception;
+          reject(exception);
         }
         resolve([exception, null]);
       }
@@ -147,7 +148,7 @@ export class BaseController<Interface extends IMongoModel> {
   find(params: IFindParams<Interface, false>): Promise<Either<Interface[]>>;
   find(params: IFindParams<Interface, true>): Promise<Interface[]>;
   find(params: IFindParams<Interface, boolean>): Promise<Either<Interface[]> | Interface[]> {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve, reject) => {
       try {
         const _model = this.getModel(params.databaseName);
         const result: Interface[] = await _model
@@ -161,7 +162,7 @@ export class BaseController<Interface extends IMongoModel> {
       } catch (e) {
         const exception = new GenericException({ name: e.name, message: e.message });
         if (params.throwErrors) {
-          throw exception;
+          reject(exception);
         }
         resolve([exception, null]);
       }
@@ -178,7 +179,7 @@ export class BaseController<Interface extends IMongoModel> {
   findOne(params: IFindOneParams<Interface, false>): Promise<Either<Interface>>;
   findOne(params: IFindOneParams<Interface, true>): Promise<Interface>;
   findOne(params: IFindOneParams<Interface, boolean>): Promise<Either<Interface> | Interface> {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve, reject) => {
       try {
         const _model = this.getModel(params.databaseName);
         const result = (await _model.findOne(params.filter, params.fieldsToShow).lean(true)) as any;
@@ -189,7 +190,7 @@ export class BaseController<Interface extends IMongoModel> {
       } catch (e) {
         const exception = new GenericException({ name: e.name, message: e.message });
         if (params.throwErrors) {
-          throw exception;
+          reject(exception);
         }
         resolve([exception, null]);
       }
@@ -204,7 +205,7 @@ export class BaseController<Interface extends IMongoModel> {
   delete(params: IDeleteParams<false>): Promise<Either<DeleteOp>>;
   delete(params: IDeleteParams<true>): Promise<DeleteOp>;
   delete(params: IDeleteParams<boolean>): Promise<Either<DeleteOp> | DeleteOp> {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve, reject) => {
       try {
         const _model = this.getModel(params.databaseName);
         const result = (await _model.deleteOne({ _id: params.id }, { session: params.session }).lean(true)) as any;
@@ -215,7 +216,7 @@ export class BaseController<Interface extends IMongoModel> {
       } catch (e) {
         const exception = new GenericException({ name: e.name, message: e.message });
         if (params.throwErrors) {
-          throw exception;
+          reject(exception);
         }
         resolve([exception, null]);
       }
@@ -230,7 +231,7 @@ export class BaseController<Interface extends IMongoModel> {
   deleteMany(params: IDeleteManyParams<Interface, false>): Promise<Either<DeleteOp>>;
   deleteMany(params: IDeleteManyParams<Interface, true>): Promise<DeleteOp>;
   deleteMany(params: IDeleteManyParams<Interface, boolean>): Promise<Either<DeleteOp> | DeleteOp> {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve, reject) => {
       try {
         const _model = this.getModel(params.databaseName);
         // The @ts-ignore above is here because @types/mongoose don't have correct typings for ModelOptions
@@ -243,7 +244,7 @@ export class BaseController<Interface extends IMongoModel> {
       } catch (e) {
         const exception = new GenericException({ name: e.name, message: e.message });
         if (params.throwErrors) {
-          throw exception;
+          reject(exception);
         }
         resolve([exception, null]);
       }
@@ -251,19 +252,24 @@ export class BaseController<Interface extends IMongoModel> {
   }
   /**
    * Updates a Document
-   * @param entity A object that matchs a mongoose schema with a currently know ObjectId
-   * @param databaseName Set this to query on another database in the current mongo connection
-   * @param session A mongoose session to handle transactions
+   * @param params.entity A object that matchs a mongoose schema with a currently know ObjectId
+   * @param params.databaseName Set this to query on another database in the current mongo connection
+   * @param params.session A mongoose session to handle transactions
    * @param params.throwErrors Enable classical try/catch way of handling errors
+   * @param params.upsert If true, and no documents found, insert a new document
    */
   update(params: IUpdateParams<Interface, false>): Promise<Either<Interface>>;
   update(params: IUpdateParams<Interface, true>): Promise<Interface>;
   update(params: IUpdateParams<Interface, boolean>): Promise<Either<Interface> | Interface> {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve, reject) => {
       try {
         const _model = this.getModel(params.databaseName);
         const result: Interface = (await _model
-          .findOneAndUpdate(params.conditions, params.entity, { session: params.session })
+          .findOneAndUpdate(params.conditions, params.entity, {
+            session: params.session,
+            upsert: params.upsert,
+            new: params.upsert,
+          })
           .exec()) as any;
         if (!result) {
           throw new EntityNotFoundException(params.conditions);
@@ -275,7 +281,7 @@ export class BaseController<Interface extends IMongoModel> {
       } catch (e) {
         const exception = new GenericException({ name: e.name, message: e.message });
         if (params.throwErrors) {
-          throw exception;
+          reject(exception);
         }
         resolve([exception, null]);
       }
@@ -291,7 +297,7 @@ export class BaseController<Interface extends IMongoModel> {
   insertMany(params: IInsertManyParams<Interface, false>): Promise<Either<Interface[]>>;
   insertMany(params: IInsertManyParams<Interface, true>): Promise<Interface[]>;
   insertMany(params: IInsertManyParams<Interface, boolean>): Promise<Either<Interface[]> | Interface[]> {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve, reject) => {
       try {
         const _model = this.getModel(params.databaseName);
         const result = (await _model.insertMany(params.entities, { session: params.session })) as any;
@@ -302,7 +308,7 @@ export class BaseController<Interface extends IMongoModel> {
       } catch (e) {
         const exception = new GenericException({ name: e.name, message: e.message });
         if (params.throwErrors) {
-          throw exception;
+          reject(exception);
         }
         resolve([exception, null]);
       }
@@ -317,7 +323,7 @@ export class BaseController<Interface extends IMongoModel> {
   count(params: ICountParams<Interface, false>): Promise<Either<number>>;
   count(params: ICountParams<Interface, true>): Promise<number>;
   count(params: ICountParams<Interface, boolean>): Promise<Either<number> | number> {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve, reject) => {
       try {
         const _model = this.getModel(params.databaseName);
         const result = await _model.count(params.filter).exec();
@@ -328,7 +334,7 @@ export class BaseController<Interface extends IMongoModel> {
       } catch (e) {
         const exception = new GenericException({ name: e.name, message: e.message });
         if (params.throwErrors) {
-          throw exception;
+          reject(exception);
         }
         resolve([exception, null]);
       }
@@ -344,7 +350,7 @@ export class BaseController<Interface extends IMongoModel> {
   distinct<T>(params: IDistinctParams<Interface, false>): Promise<Either<T[]>>;
   distinct<T>(params: IDistinctParams<Interface, true>): Promise<T[]>;
   distinct<T>(params: IDistinctParams<Interface, boolean>): Promise<Either<T[]> | T[]> {
-    return new Promise(async resolve => {
+    return new Promise(async (resolve, reject) => {
       try {
         const _model = this.getModel(params.databaseName);
         const result = await _model.distinct(params.field as string, params.filter).exec();
@@ -352,7 +358,7 @@ export class BaseController<Interface extends IMongoModel> {
       } catch (e) {
         const exception = new GenericException({ name: e.name, message: e.message });
         if (params.throwErrors) {
-          throw exception;
+          reject(exception);
         }
         resolve([exception, null]);
       }
