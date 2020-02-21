@@ -1,11 +1,12 @@
 import 'reflect-metadata';
 import * as mongoose from 'mongoose';
 import * as sourceMapSupport from 'source-map-support';
+import { logger } from './shared/utils/logger';
+import ServerFactory from './server/ServerFactory';
 
 import { InversifyExpressServer } from 'inversify-express-utils';
 
 import env from './config/env';
-import middleware from './shared/middlewares';
 import injectionContainer from './config/inversify.config';
 import Connection from './shared/class/Connection';
 import REFERENCES from './config/inversify.references';
@@ -18,23 +19,24 @@ mongoose.set('useFindAndModify', true);
 sourceMapSupport.install();
 process.on('unhandledRejection', console.log);
 
+logger.info('Configuring server');
 const server = new InversifyExpressServer(injectionContainer);
 const mongoConn = injectionContainer.get<Connection>(REFERENCES.Connection);
 
 server.setConfig(app => {
-  middleware.initMiddlewares(app);
-  middleware.initCustomRoutes(app);
+  ServerFactory.initExternalMiddlewares(app);
 });
 
 server.setErrorConfig(app => {
-  middleware.initExceptionMiddlewares(app);
+  ServerFactory.initExceptionMiddlewares(app);
 });
 
+logger.info('Bootstraping server');
 const bootstrapedServer = server.build();
 
 bootstrapedServer.listen(env.server_port, async () => {
   await mongoConn.connect();
-  console.log(`Opening the gates in ${env.server_port}`);
+  logger.info(`Server up and running on ${env.server_port}`);
 });
 
 process.on('SIGINT', async () => {

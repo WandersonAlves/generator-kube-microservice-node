@@ -62,26 +62,22 @@ module.exports = class extends Generator {
         this.destinationPath('./aliases/**')
       );
       this.fs.move(
-        this.destinationPath('./src/entities/SomeEntity/**'),
-        this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}`)
-      );
-      this.fs.move(
         this.destinationPath("./src/controllers/EntityController.ts"),
         this.destinationPath(
           `./src/controllers/${this._capitalize(answers.entityName)}Controller.ts`
         )
       );
       this.fs.move(
-        this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}/EntityService.ts`),
-        this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}/${this._capitalize(answers.entityName)}Service.ts`)
+        this.destinationPath(`./src/services/EntityService.ts`),
+        this.destinationPath(`./src/services/${this._capitalize(answers.entityName)}Service.ts`)
       );
       this.fs.move(
-        this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}/EntityModel.ts`),
-        this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}/${this._capitalize(answers.entityName)}Model.ts`)
+        this.destinationPath(`./src/models/EntityModel.ts`),
+        this.destinationPath(`./src/models/${this._capitalize(answers.entityName)}Model.ts`)
       );
       this.fs.move(
-        this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}/EntityInterface.ts`),
-        this.destinationPath(`./src/entities/${this._capitalize(answers.entityName)}/${this._capitalize(answers.entityName)}Interface.ts`)
+        this.destinationPath(`./src/models/EntityInterface.ts`),
+        this.destinationPath(`./src/models/${this._capitalize(answers.entityName)}Interface.ts`)
       );
       this.composeWith(require.resolve('generator-git-init/generators/app'))
       this.installDependencies({

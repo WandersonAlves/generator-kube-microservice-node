@@ -13,7 +13,7 @@
     "trailing-comma": false,
     "arrow-parens": false,
     "variable-name": {
-      "options": ["allow-leading-underscore"]
+      "options": ["allow-leading-underscore", "allow-pascal-case"]
     },
     "member-access": {
       "options": ["no-public"]
@@ -22,7 +22,5 @@
     "no-require-imports": true,
     "interface-name": false
   },
-  "rulesDirectory": [
-    "tslint-misc-rules"
-  ]
+  "rulesDirectory": ["tslint-misc-rules"]
 }

@@ -3,9 +3,9 @@ import { INTERNAL_SERVER_ERROR, NO_CONTENT } from 'http-status-codes';
 import { inject } from 'inversify';
 import { controller, httpGet, response } from 'inversify-express-utils';
 
-import withException from '../decorators/withException';
-import Connection from '../../shared/class/Connection';
-import REFERENCES from '../../config/inversify.references';
+import withException from '../shared/decorators/withException';
+import Connection from '../shared/class/Connection';
+import REFERENCES from '../config/inversify.references';
 
 @controller('/health')
 export default class HealthCheckController {

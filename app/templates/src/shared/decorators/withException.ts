@@ -1,6 +1,6 @@
 import GenericException from '../exceptions/GenericException';
 
-export default function withException<T>(target: object, name: string | symbol, descriptor: PropertyDescriptor): TypedPropertyDescriptor<T> {
+export default function withException(target: object, name: string | symbol, descriptor: PropertyDescriptor) {
   const original = descriptor.value;
   descriptor.value = async function(...args) {
     try {

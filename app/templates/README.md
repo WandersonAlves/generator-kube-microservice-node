@@ -79,8 +79,6 @@ Everything is injected by `inversify` and the composition root lives in `src/con
 
 Inside the composition root, we import all controllers and `inversifyjs` takes care to setup our application (as seen on `src/index.ts`)
 
-To use swagger, see documentation of `swagger-express-ts` (https://github.com/olivierlsc/swagger-express-ts)
-
 ### Services
 
 The service layer extends the `BaseController<T>` which has all methods to handle the mongoose model (with has typings too!).
@@ -116,7 +114,7 @@ The producer is straight forward: just call the function that sends something to
 
 ### Exceptions
 
-All exceptions that are catch by `src/shared/server/middlewares/exception.ts`, have `GenericException` as they base (some edge cases will be handled by the default `express` error handler).
+All exceptions that are catch by `src/server/middlewares/`, have `GenericException` as they base (some edge cases will be handled by the default `express` error handler).
 
 Currently built-in exceptions:
 
@@ -129,7 +127,7 @@ Currently built-in exceptions:
 
 ### Service authorization
 
-In `src/shared/server/middlewares` you can find a `Unauthorized.ts` file that handles authorization logic of this service.
+In `src/server/` you can find a `Unauthorized.ts` file that handles authorization logic of this service.
 
 Using this middleware, you should have another service with endpoint `/auth` that receives a `JWToken` via `Authorization` header.
 

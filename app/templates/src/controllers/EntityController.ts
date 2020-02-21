@@ -1,4 +1,4 @@
-import { <%= interfaceName %> } from '../entities/<%= entityName %>/<%= interfaceName %>';
+import { <%= interfaceName %> } from '../models/<%= interfaceName %>';
 import { OK, NO_CONTENT, CREATED } from 'http-status-codes';
 import { Response, Request } from 'express';
 import { ValidationChain } from 'express-validator';
@@ -15,7 +15,7 @@ import {
   requestBody,
 } from 'inversify-express-utils';
 
-import <%= serviceName %> from '../entities/<%= entityName %>/<%= serviceName %>';
+import <%= serviceName %> from '../services/<%= serviceName %>';
 import REFERENCES from '../config/inversify.references';
 import EntityNotFoundException from '../shared/exceptions/EntityNotFoundException';
 import withException from '../shared/decorators/withException';

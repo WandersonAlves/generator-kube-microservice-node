@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import env from '../../config/env';
-import AuthException from '../exceptions/AuthException';
-import injectionContainer from '../../config/inversify.config';
-import RemoteController from '../class/RemoteController';
-import REFERENCES from '../../config/inversify.references';
+import env from '../config/env';
+import AuthException from '../shared/exceptions/AuthException';
+import injectionContainer from '../config/inversify.config';
+import RemoteController from '../shared/class/RemoteController';
+import REFERENCES from '../config/inversify.references';
 
 const remoteController = injectionContainer.get<RemoteController>(
   REFERENCES.RemoteController,
