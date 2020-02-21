@@ -26,7 +26,7 @@ interface ICommonParamsFilter<T, BooleanType> {
 interface IFindParams<ReturnType, BooleanType extends boolean> extends ICommonParamsFilter<ReturnType, BooleanType> {
   pagination?: Pagination;
   sort?: InterfacePagination<ReturnType>;
-  fieldsToShow?: InterfaceBoolean<BooleanType>;
+  fieldsToShow?: InterfaceBoolean<ReturnType>;
 }
 
 interface IDistinctParams<T, BooleanType> extends ICommonParamsFilter<T, BooleanType> {
