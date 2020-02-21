@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+# [2.5.0](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.4.1...v2.5.0) (2020-02-21)
+
+
+### Bug Fixes
+
+* **node:** reject promise if throwErrors is set ([f7e43da](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/f7e43da))
+* **node:** wrong fieldsToShow generic ([115c49b](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/115c49b))
+
+
+### Features
+
+* **node:** change service structure ([1b58dea](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/1b58dea))
+
+
+
 ## [2.4.1](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.4.0...v2.4.1) (2020-01-29)
 
 
