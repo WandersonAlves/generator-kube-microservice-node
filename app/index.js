@@ -17,7 +17,7 @@ module.exports = class extends Generator {
       {
         type: 'input',
         name: 'projectName',
-        message: 'Enter the name for your project: (i.e.: company-something-service)'
+        message: 'Enter the name for your project: (i.e.: something-service)'
       },
       {
         type: 'input',
@@ -26,9 +26,9 @@ module.exports = class extends Generator {
       }
     ]).then((answers) => {
       console.log(
-        "Remember to check Docker image on package.json and deployment.yaml (in case you use private repo)\n",
-        "If you will use the queue files, ensure that put a cert file somewhere if you run on production env\n",
-        "Also, remember to put a .env file on root repo with your secrets"
+        "Remember to check Docker image on package.json and deployment.yaml (in case you use private repo)",
+        "\nIf you will use the queue files, ensure that put a cert file somewhere if you run on production env",
+        "\nAlso, remember to put a .env file on root repo with your secrets"
       );
       // create destination folder
       this.destinationRoot(answers.projectName);

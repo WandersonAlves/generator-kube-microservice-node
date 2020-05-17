@@ -1,3 +1,4 @@
+import { EventEmitter } from 'events';
 import 'reflect-metadata';
 import * as mongoose from 'mongoose';
 import * as sourceMapSupport from 'source-map-support';
@@ -17,11 +18,12 @@ mongoose.set('useUnifiedTopology', true);
 mongoose.set('useFindAndModify', true);
 
 sourceMapSupport.install();
-process.on('unhandledRejection', console.log);
+process.on('unhandledRejection', console.error);
 
 logger.info('Configuring server');
 const server = new InversifyExpressServer(injectionContainer);
 const mongoConn = injectionContainer.get<Connection>(REFERENCES.Connection);
+const eventBus = injectionContainer.get<EventEmitter>(REFERENCES.EventBus);
 
 server.setConfig(app => {
   ServerFactory.initExternalMiddlewares(app);
@@ -36,6 +38,7 @@ const bootstrapedServer = server.build();
 
 bootstrapedServer.listen(env.server_port, async () => {
   await mongoConn.connect();
+  eventBus.emit('mongoConnection');
   logger.info(`Server up and running on ${env.server_port}`);
 });
 

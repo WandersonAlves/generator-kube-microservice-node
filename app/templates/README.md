@@ -1,27 +1,22 @@
 # <%= projectName %>
 
-Initial template for your services!.
+This template contains:
 
-Comes with:
-
-- TypeScript;
-- `GenericException` base for all exceptions;
-- `BaseController` for controllers extends from it;
-- Dockerfile;
-- RabbitMQ consumers/producers;
-- Swagger endpoints using `swagger-express-ts` package;
-- TSDoc with `typedoc` package;
-- Kubernetes deployment config;
+- TypeScript
+- Dockerfile
+- Kubernetes deployment configuration (including `Service` k8s object)
+- TypeScript definition for mongo operators on controller functions
+- `MongoService` abstract class for all entities services
+- `GenericException` base for all exceptions
+- `withException` decorator to abstract error handling logic (used on generated controllers)
+- `RemoteController` class to handle `axios` requets
+- `RabbitMQ` consumers and producers logic
+- `expressjs` implementation with `inversifyjs` and `inversify-express-utils`
 
 ## How to run
 
 - Run `yarn dev` to spawn a nodemon server watching source files
-- Create a .env file in root. This file keep some important enviromment variables has:
-  - PORT
-  - MONGO_URL
-  - MONGO_DB
-
-Edit `src/config/env.ts` with your current needs
+- Create a .env file in root to handle all your secrets. Look at `src/config/env.ts` to see the default list of variables
 
 ## Common everyday commands
 
@@ -44,86 +39,139 @@ Controllers of this boilerplate are handled by `inversify-express-utils` package
 Here is a exemple:
 
 ```typescript
-@controller('/<%= entityNameLowerCase %>')
-export default class <%= controllerName %> {
-  @inject(REFERENCES.<%= serviceName %>) private <%= serviceInstanceName %>: <%= serviceName %>;
+@controller('/user')
+export default class UserController {
+  @inject(REFERENCES.UserService) private userService: UserService;
 
-  @ApiOperationGet({
-    description: '',
-    summary: '',
-    responses: {
-      200: {
-        description: 'Success',
-        type: SwaggerDefinitionConstant.Response.Type.ARRAY,
-        model: '',
-      },
-    },
-  })
   @httpGet('/')
   @withException
-  async get<%= entityName %>s(@response() res: Response) {
-    const result = await this.<%= serviceInstanceName %>.find({});
+  async getTenants(@response() res: Response) {
+    const result = await this.tenantService.find({});
     res.status(OK).send(result);
   }
 
-  @httpPost('/', ..._createEdit<%= entityName %>Validator)
+  @httpGet('/:id')
   @withException
-  async post<%= entityName %>(@request() req: Request, @response() res: Response, @requestBody() <%= entityNameLowerCase %>: <%= interfaceName %>) {
-    this.<%= serviceInstanceName %>.validateRequest(req);
-    const new<%= entityName %> = await this.<%= serviceInstanceName %>.insert(<%= entityNameLowerCase %>);
-    res.status(CREATED).send(new<%= entityName %>);
+  async getUser(@response() res: Response, @requestParam('id') id: string) {
+    // Using Redis
+    const result = this.redis.withRedis({ key: 'getUser', expires: 10 }, () =>
+      this.userService.findById({ id, throwErrors: true }),
+    );
+    if (!result) {
+      throw new EntityNotFoundException({ id });
+    }
+    res.status(OK).send(result);
   }
 ```
 
-Everything is injected by `inversify` and the composition root lives in `src/config/inversify.config.ts`.
+Everything is injected by `inversify` and the composition root lives in `src/config/inversify.config.ts`. Your entities controllers should be imported on `src/config/inversify.config.ts`, so `inversify-express-utils` can inject your controller on express routes.
 
 Inside the composition root, we import all controllers and `inversifyjs` takes care to setup our application (as seen on `src/index.ts`)
 
 ### Services
 
-The service layer extends the `BaseController<T>` which has all methods to handle the mongoose model (with has typings too!).
+The service layer extends the `MongoService<T>` which has all methods to handle the mongoose model.
+
+```typescript
+import { injectable } from 'inversify';
+import { MongoService } from '../shared/class/MongoService';
+import { UserInterface } from '../models/UserInterface';
+import { UserSchema, UserModel } from '../models/UserModel';
+
+@injectable()
+export default class UserService extends MongoService<UserInterface> {
+  constructor() {
+    /**
+     * MongoService uses the Schema because if you change the default database while using some method from MongoService,
+     * mongoose don't knows how to create the model schema for this non default database, so we help mongoose to do that
+     */
+    super(UserModel, UserSchema);
+  }
+}
+```
+
+
+### Redis
+
+Redis connection occurs when you require redis into another class. Use like this:
+
+```typescript
+@controller('/user')
+export default class UserController {
+  @inject(REFERENCES.UserService) private userService: UserService;
+  @inject(REFERENCES.RedisController) private redis: RedisController;
+
+  @httpGet('/')
+  @withException
+  async getUsers(@response() res: Response) {
+    const result = await this.userService.find({});
+    res.status(OK).send(result);
+  }
+
+  @httpGet('/:id')
+  @withException
+  async getUser(@response() res: Response, @requestParam('id') id: string) {
+    // This method gets a entry from cache and set it if don't exist
+    const result = this.redis.withRedis({ key: 'getUser', expires: 10 }, () =>
+      this.userService.findById({ id, throwErrors: true }),
+    );
+    if (!result) {
+      throw new EntityNotFoundException({ id });
+    }
+    res.status(OK).send(result);
+  }
+```
 
 ### RabbitMQ
 
-To use a consume/producer function for RabbitMQ, bootstrap the connection on your `service` like this:
+To use a consume/producer function for RabbitMQ, bootstrap the connection on your `Service` like this:
 
 ```typescript
-/**
+
+@injectable()
+export default class UserService extends MongoService<UserInterface> {
+
+  @inject(REFERENCES.EventBus) private eventBus: EventEmitter;
+  private _channel: Channel;
+  constructor() {
+    super(UserModel, UserSchema);
+    // Only connect to Rabbit when mongo is connected
+    this.eventBus.on('mongoConnection', this._createRabbitMQChannelAndSetupQueue);
+    // Reconnect to rabbitmq
+    this.eventBus.on('reconnectRabbitMQ', this._createRabbitMQChannelAndSetupQueue);
+  }
+
+  /**
  * Creates a RabbitMQ Channel and setup the queue for this service
  */
-// Run this function on constructor
-private async _createRabbitMQChannelAndSetupQueue() {
-  this._channel = await createRabbitMQChannel(env.rabbitmq_url);
-  // Some consumer on ./src/queue/consumers
-  consumeCreateUser(this._channel, this._consumeCreateUser);
+  // Run this function on constructor
+  private async _createRabbitMQChannelAndSetupQueue() {
+    this._channel = await createRabbitMQChannel(env.rabbitmq_url);
+    // Some consumer on ./src/queue/consumers
+    consumeCreateUser(this._channel, this._consumeCreateUser);
+  }
+  /**
+   * RabbitMQ Consumer CREATE_USER Function
+   *
+   * Creates a user
+   * @param payload RabbitMQ ConsumeMessage type.
+   */
+  private _consumeCreateUser = async (payload: ConsumeMessage) => {
+    const data = JSON.parse(payload.content.toString());
+    /** DO SOMETHING  */
+    this._channel.ack(payload); // sends a acknowledgement
+  };
 }
-/**
- * RabbitMQ Consumer CREATE_USER Function
- *
- * Creates a user
- * @param payload RabbitMQ ConsumeMessage type.
- */
-private _consumeCreateUser = async (payload: ConsumeMessage) => {
-  const data = JSON.parse(payload.content.toString());
-  /** DO SOMETHING  */
-  this._channel.ack(payload); // sends a acknowledgement
-};
+
 ```
 
 The producer is straight forward: just call the function that sends something to a queue (ex: `./src/queue/producers/`)
 
 ### Exceptions
 
-All exceptions that are catch by `src/server/middlewares/`, have `GenericException` as they base (some edge cases will be handled by the default `express` error handler).
+All exceptions that are catch by `src/server/middlewares/index.ts`, have `GenericException` as they base.
 
-Currently built-in exceptions:
-
-- `AuthException`: should be throw on authentication errors
-- `EntityNotFoundException`: should be throw on not found queries
-- `MongoNotConnectedException`: internal exception for mongo errors
-- `RouteNotFoundException`: throw when you hit a route that doenst't exist
-- `UnprocessableEntityException`: should be throw on a entity can't be saved/updated
-- `UpstreamConnectionException`: internal exception for `RemoteController` exceptions
+So, just continuing throw new errors based on `GenericException.ts` that express will catch and handle. (see `src/shared/exceptions/` folder for default exceptions created)
 
 ### Service authorization
 
@@ -133,42 +181,63 @@ Using this middleware, you should have another service with endpoint `/auth` tha
 
 If that service responds with 200, you're authorized to procced with your request into this service.
 
+To use it, just insert into `src/server/ServerFactory.ts` a line containing this middleware
+
+```typescript
+import * as bodyParser from 'body-parser';
+import * as compression from 'compression';
+import * as cors from 'cors';
+import * as express from 'express';
+import { RouteNotFoundMiddleware, ExceptionMiddleware } from './middlewares';
+import Unauthorized from './Unauthorized';
+
+export default {
+  initExternalMiddlewares(server: express.Application) {
+    server.use(compression());
+    server.use(bodyParser.json());
+    server.use(cors());
+  },
+  initExceptionMiddlewares(server: express.Application) {
+    // New Line!!!
+    server.use(Unauthorized)
+    server.use(RouteNotFoundMiddleware);
+    server.use(ExceptionMiddleware);
+  },
+};
+```
+
 ### Dependency Injection
 
 This template uses `inversifyjs` to handle DI with a IoC container.
 The file that handles that is `src/config/inversify.config.ts`
 
 ```typescript
-import '../entities/Tenant/TenantController';
+import '../entities/User/UserController';
 import '../shared/middlewares/HealthCheck';
 
 import { Container } from 'inversify';
 
 import REFERENCES from './inversify.references';
 import Connection from '../shared/class/Connection';
-import TenantService from '../entities/Tenant/TenantService';
-import tenantModel from '../entities/Tenant/TenantModel';
+import UserService from '../entities/User/UserService';
 import RemoteController from '../shared/class/RemoteController';
 
 const injectionContainer = new Container({ defaultScope: 'Singleton' });
 
 injectionContainer.bind(REFERENCES.Connection).to(Connection);
 injectionContainer.bind(REFERENCES.RemoteController).to(RemoteController);
-injectionContainer.bind(REFERENCES.TenantService).to(TenantService);
+injectionContainer.bind(REFERENCES.UserService).to(UserService);
 
-injectionContainer.bind(REFERENCES.TenantModel).toConstantValue(tenantModel);
 
 export default injectionContainer;
 
 ```
 
-Your entities controllers should be imported on `src/config/inversify.config.ts`, so `inversify-express-utils` can inject your controller on express routes (as seen on first two lines on example above).
-
 If your controller has another class dependency, inject the dependency onto your class like this:
 
 ```typescript
-export default class <%= controllerName %> {
-  @inject(REFERENCES.<%= serviceName %>) private <%= serviceInstanceName %>: <%= serviceName %>;
+export default class UserController {
+  @inject(REFERENCES.UserService) private userService: UserService;
 }
 ```
 
@@ -178,13 +247,11 @@ To build a docker image, you have to build the project using `npm run build` and
 
 The Kubernetes deployment file (`deployment.yaml`), has a `LivenessProbe` that checks if the route `/health` returns 200. This route, pings to the database. If something goes wrong, your service will be restarted.
 
-The deployment also has a `TimeZone` configuration that you can set the `TimeZone` of the running container. The default is pointing to America/Recife and you can change this anytime if you need.
-
 The `Service` object in `deployment.yaml` file expose the `Pod` created by the `Deployment` to the world on port 80 and binding the port 3000 of the `Pod` to it.
 
 After configuring, you need to add the `Service` definition in a `ingress` controller of your k8s cluster.
 
-Since this template uses Kubernetes, the `.dockerignore` and `Dockerfile` files **DOESN'T** have a reference to `.env`file (which, also is ignored on `.gitignore` file). The way we use here on @e3labs is setting a `envFrom` field on `deployment.yaml`.
+Since this template uses Kubernetes, the `.dockerignore` and `Dockerfile` files **DOESN'T** have a reference to `.env`file (which, also is ignored on `.gitignore` file). The way to go about it is setting a `envFrom` field on `deployment.yaml`.
 
 Here is a example:
 
@@ -192,19 +259,19 @@ Here is a example:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: e3-product-service
+  name: user-service
 spec:
   replicas: 4
   selector:
     matchLabels:
-      app: e3-product-service
+      app: user-service
   template:
     metadata:
       labels:
-        app: e3-product-service
+        app: user-service
     spec:
       containers:
-      - name: e3-product-service
+      - name: user-service
         image: <some-image>
         ports:
           - containerPort: 3000

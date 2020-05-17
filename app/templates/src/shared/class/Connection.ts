@@ -1,6 +1,6 @@
 import { Connection as MongoConnection, createConnection } from 'mongoose';
 import { injectable } from 'inversify';
-
+import { logger } from '../utils/logger';
 import env from '../../config/env';
 import MongoNotConnectedException from '../exceptions/MongoNotConnectedException';
 
@@ -23,7 +23,7 @@ export default class Connection {
         }
         resolve(this);
       } catch (err) {
-        console.error(err);
+        logger.error(err, { label: 'MongoDB' });
         reject(err);
         process.exit(1);
       }

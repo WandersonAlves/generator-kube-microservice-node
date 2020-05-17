@@ -1,5 +1,6 @@
 const path = require('path');
-const CopyPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
+
 module.exports = {
   target: 'node',
   entry: {
@@ -9,14 +10,7 @@ module.exports = {
     path: path.resolve(__dirname, './build'),
     filename: 'build.js',
   },
-  resolve: {
-    alias: {
-      hiredis: path.join(__dirname, 'aliases/hiredis.js'),
-    },
-  },
   plugins: [
-    new CopyPlugin([
-      { from: 'node_modules/saslprep/code-points.mem', to: '' }
-    ]),
+    new webpack.IgnorePlugin(/^hiredis$/),
   ],
 };

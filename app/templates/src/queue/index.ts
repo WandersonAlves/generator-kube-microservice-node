@@ -1,17 +1,39 @@
 import * as amqp from 'amqplib';
 import * as fs from 'fs';
 import { Channel } from 'amqplib';
+import { EventEmitter } from 'events';
+import { logger } from '../shared/utils/logger';
+import injectionContainer from '../config/inversify.config';
+import REFERENCES from '../config/inversify.references';
 
 /**
  * Creates a RabbitMQ channel
  * @param rabbitmqURL RabbitMQ URL
  */
 const createRabbitMQChannel = async (rabbitmqURL: string) => {
-  const connection = await amqp.connect(rabbitmqURL, {
-    ca: [process.env.NODE_ENV === 'production' ? fs.readFileSync('./<FILE_PATH>') : null],
-  });
-  const channel = await connection.createChannel();
-  return channel;
+  try {
+    const connection = await amqp.connect(`${rabbitmqURL}?heartbeat=50`, {
+      ca: [process.env.NODE_ENV === 'production' ? fs.readFileSync('./rabbitmq.cert') : null],
+    });
+
+    logger.info.apply(logger, ['Connection Succefful', { label: 'AMQP' }]);
+
+    connection.on('error', err => {
+      logger.error(err, { label: 'AMQP' });
+    });
+
+    connection.on('close', () => {
+      logger.error('Channel closed, reconnecting...', { label: 'AMQP' });
+      const eventBus = injectionContainer.get<EventEmitter>(REFERENCES.EventBus);
+      eventBus.emit('reconnectRabbitMQ', true);
+    });
+
+    const channel = await connection.createChannel();
+    return channel;
+  } catch (e) {
+    logger.error(e, { label: 'AMQP' });
+    process.exit(1);
+  }
 };
 /**
  * Connects to a queue and consume all the messages by the @param handler
@@ -37,10 +59,9 @@ export const assertAndConsumeFromQueue = (
   queueName: string,
   channel: amqp.Channel,
   handler: (payload: amqp.ConsumeMessage) => void,
-  options: amqp.Options.Consume = { noAck: false },
 ) => {
   channel.assertQueue(queueName, { durable: true });
-  channel.consume(queueName, handler, options);
+  channel.consume(queueName, handler, { noAck: false });
 };
 
 /**
