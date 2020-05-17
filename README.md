@@ -53,7 +53,7 @@ export default class UserController {
   @httpGet('/')
   @withException
   async getTenants(@response() res: Response) {
-    const result = await this.tenantService.find({});
+    const result = await this.tenantService.find({ throwErrors: true });
     res.status(OK).send(result);
   }
 
@@ -61,15 +61,22 @@ export default class UserController {
   @withException
   async getUser(@response() res: Response, @requestParam('id') id: string) {
     // Using Redis
-    const result = this.redis.withRedis({ key: 'getUser', expires: 10 }, () =>
-      this.userService.findById({ id, throwErrors: true }),
+    const [exception, result] = this.redis.withRedis({ key: 'getUser', expires: 10 }, () =>
+      this.userService.findById({ id }),
     );
-    if (!result) {
-      throw new EntityNotFoundException({ id });
+    if (!exception) {
+      return res.status(exception.statusCode).send(exception.formatError())
     }
-    res.status(OK).send(result);
+    return res.status(OK).send(result);
   }
 ```
+
+There's two types of response when using `MongoService`:
+
+- A result using `Either<L, R>`
+- The raw entity
+
+The two examples are described above.
 
 Everything is injected by `inversify` and the composition root lives in `src/config/inversify.config.ts`. Your entities controllers should be imported on `src/config/inversify.config.ts`, so `inversify-express-utils` can inject your controller on express routes.
 
