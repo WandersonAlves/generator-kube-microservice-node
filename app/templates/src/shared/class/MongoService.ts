@@ -67,6 +67,7 @@ interface IUpdateParams<ReturnType, BooleanType extends boolean> extends ICommon
   upsert?: boolean;
 }
 
+@injectable()
 export class MongoService<Interface extends IMongoModel> {
   @inject(REFERENCES.Connection) private _connection: Connection;
 
