@@ -1,6 +1,18 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [2.5.3](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.5.0...v2.5.3) (2020-11-07)
+
+
+### Features
+
+* stable ([99a6615](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/99a6615f458419c5a738e9975e10861ff1c71f17))
+
+
+### Bug Fixes
+
+* missing [@injectable](https://github.com/injectable) on MongoService ([f29fad1](https://github.com/WandersonAlves/generator-kube-microservice-node/commit/f29fad1c97fdc95cb38ca0be948908d738e3f131))
 
 ## [2.5.2](https://github.com/WandersonAlves/generator-kube-microservice-node/compare/v2.5.0...v2.5.2) (2020-05-17)
 
